@@ -3,12 +3,14 @@
 import { ArrowRightOutlined, DeleteOutlined, EditOutlined, PlusOutlined, SaveOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Card, Divider, Form, Input, InputNumber, message, Modal, Pagination, Popconfirm, Result, Skeleton, Tag, Upload } from 'antd'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '@ant-design/v5-patch-for-react-19';
 import axios from 'axios'
 import useSWR, { mutate } from 'swr'
 import fetcher from '@/lib/fetcher'
+import {debounce} from 'lodash'
 import clientCatchError from '@/lib/client-catch-error'
+import calcPrice from '@/lib/calcPrice'
 
 const Products = () => {
   const [prodForm] = Form.useForm()
@@ -18,7 +20,14 @@ const Products = () => {
   const [limit, setLimit] = useState(8)
   const [editId, setEditId] = useState<string | null> (null)
   const {data, error, isLoading} = useSWR(`/api/product?page=${page}&limit=${limit}`, fetcher)
-  
+  const [products, setProducts] = useState({data: [], total: 0})
+
+  useEffect(()=>{
+    if(data)
+      {
+        setProducts(data)
+      }
+  }, [data])
 
   const openModal = ()=>{
     setOpen(true)
@@ -29,10 +38,7 @@ const Products = () => {
     prodForm.resetFields();
     setEditId(null);
   }
-  const onSearch = (values: any)=>{
-
-  }
-
+  
   const handleUploadChange = ({ fileList }: any) => {
   setFileList(fileList);
   };
@@ -54,9 +60,6 @@ const Products = () => {
     handleClose()
   }
 
-  const calcPrice = (price: number, disc: number) =>{
-    return Math.round((100-disc) * price /100)
-  }
 
   const onPaginate = (page: number)=>{
     setPage(page)
@@ -119,6 +122,17 @@ const Products = () => {
      mutate(`/api/product?page=${page}&limit=${limit}`)
   }
 
+  const onSearch = debounce(async (e: any)=>{
+    try {  
+      const value = e.target.value.trim()
+      const{data} = await axios.get(`/api/product?search=${value}`)
+      setProducts(data)
+    } 
+    catch (error) {
+      clientCatchError(error)
+    }
+  }, 1000)
+
   if(isLoading)
     return <Skeleton active/>
 
@@ -138,23 +152,23 @@ const Products = () => {
     <div className='flex flex-col gap-8'>
       
       <div className='flex justify-between '>
-        <Form onFinish={onSearch}>
-            <Form.Item name= "search" rules={[{required: true}]} className='!mb-0'>
-              <Input
-              placeholder='Search Products'
-              suffix={<Button htmlType='submit' type = "text" icon={<SearchOutlined/>}/>}/>
-            </Form.Item>
-        </Form>
+        <Input
+          placeholder='Search this site' 
+          size='large'
+          onChange={onSearch}
+          className='!w-[350px]'
+        />       
         <Button onClick={openModal} type='primary' size='large'>Add Product +</Button>
       </div>
 
       <div className='grid grid-cols-4 gap-8'>
-        {data.data.map((item: any, index: number)=>(
+        {products.data.map((item: any, index: number)=>(
           <Card 
           key={index}
            hoverable
+           className='!cursor-default overflow-hidden'
            cover={
-            <div className='relative w-full h-[350px]'>
+            <div className='relative w-full h-[320px]'>
               <Image src={item.image}  alt={item.title} 
                 fill style={{ objectFit: 'contain' }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
@@ -190,7 +204,7 @@ const Products = () => {
       </div>
       <div className='flex justify-center w-full'>
         <Pagination
-          total={data.total}
+          total={products.total}
           onChange={onPaginate}
           current={page}
           showSizeChanger={true}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa'; 
+import Logo from './shared/Logo';
 const Footer = () => {
   return (
     <>
@@ -7,15 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         
         {/* Brand */}
-        <div>
-          {/* <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Bazario</h2>
-          <p className="mt-2 text-sm">India’s Bazaar, Online.</p> */}
-          <svg className='cursor-pointer' width="180" height="40" viewBox="0 0 180 40" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="28" font-family="Poppins, sans-serif" font-size="28" fill="#2563EB" font-weight="600">
-            Bazario
-          </text>
-        </svg>
-        </div>
+        <Logo/>
 
         {/* Links */}
         <div>
@@ -23,8 +16,6 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li><a href="#" className="hover:underline">Men</a></li>
             <li><a href="#" className="hover:underline">Women</a></li>
-            <li><a href="#" className="hover:underline">Electronics</a></li>
-            <li><a href="#" className="hover:underline">Grocery</a></li>
           </ul>
         </div>
 
@@ -53,7 +44,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center text-xs mt-10 text-gray-500 dark:text-gray-400">
-        &copy; {new Date().getFullYear()} Bazario. All rights reserved.
+        &copy; {new Date().getFullYear()} Greenatva. All rights reserved.
       </div>
     </footer>
     </>

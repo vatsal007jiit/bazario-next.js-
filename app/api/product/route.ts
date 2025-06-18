@@ -50,9 +50,20 @@ export const GET = async (req: NextRequest) =>{
     try{
         const {searchParams} = new URL(req.url)
         const slug = searchParams.get('slug')
+        const search = searchParams.get('search')
         const page = Number(searchParams.get('page')) || 1
         const limit = Number(searchParams.get('limit')) || 8
         const skip = (page-1) * limit
+        
+        if(search)
+        {
+            const searchRegex = new RegExp(search, 'i');
+            const total = await ProductModel.countDocuments({ title: searchRegex });
+
+            const products = await ProductModel.find({title: searchRegex}).sort({createdAt: -1}).skip(skip).limit(limit)
+            return res.json({total, data:products})
+        }
+
         if(slug)
         {
             const slugs = await ProductModel.distinct('slug')
