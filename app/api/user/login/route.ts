@@ -19,7 +19,13 @@ export const POST = async (req: NextRequest) =>{
        if(!isLogin)
         return res.json({message:"Login Failed"}, {status:401})
 
-       return res.json({message: "Login Successful"})
+       const payload = {
+        id: user._id,
+        name: user.fullName,
+        email: user.email
+        
+       }
+       return res.json(payload)
     } 
     catch (error) {
         serverCatchError(error)

@@ -1,18 +1,21 @@
+'use client'
 import { UserAddOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message } from 'antd'
 import Link from 'next/link'
 import React from 'react'
 import Logo from './shared/Logo'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import clientCatchError from '@/lib/client-catch-error'
+import '@ant-design/v5-patch-for-react-19';
+import bg from '@/public/images/bg.jpg'
 
 const Signup = () => {
   const router = useRouter()
-  
+
   const handleSignup = async (values: any)=>{
       try {
-        const {data} = await axios.post('/api/signup', values)
+        const {data} = await axios.post('/api/user/signup', values)
         message.success(data.message)
         if(data)
           router.push('/login')
@@ -22,25 +25,28 @@ const Signup = () => {
       }
   }
   return (
-    <div>
+    <div  className="h-screen bg-cover bg-center mt-10"
+      style={{ backgroundImage: `url(${bg.src})` }}>
       <div className='flex items-center justify-center'>
-                <Card className='w-[480px] animate__animated animate__slideInRight'>
+                <Card className='w-[480px] animate__animated animate__slideInRight !bg-green-400'>
                     <div className='space-y-4'>
                         <div className='flex justify-center'>
                             <Logo />
                         </div>
                         <Form layout='vertical' onFinish={handleSignup}>
                             <Form.Item 
-                                label="Fullname"
-                                name="fullname"
+                                label="Full Name"
+                                name="fullName"
+                                className='font-semibold'
                                 rules={[{required: true}]}
                             >
-                                <Input size='large' placeholder='Ravi singh parihar' />
+                                <Input size='large' placeholder='Akshay Kumar' />
                             </Form.Item>
 
                             <Form.Item 
                                 label="Email"
                                 name="email"
+                                className='font-semibold'
                                 rules={[{required: true, type: 'email'}]}
                             >
                                 <Input size='large' placeholder='email@example.com' />
@@ -49,18 +55,20 @@ const Signup = () => {
                             <Form.Item 
                                 label="Password"
                                 name="password"
+                                className='font-semibold'
                                 rules={[{required: true}]}
                             >
-                                <Input.Password size='large' placeholder='email@example.com' />
+                                <Input.Password size='large' placeholder='●●●●●●●●●●' />
                             </Form.Item>
 
                             <Form.Item>
-                                <Button htmlType='submit' size='large' type="primary" danger icon={<UserAddOutlined />}>Sign up</Button>
+                                <Button htmlType='submit' size='large' type="primary" className=' !bg-green-600 hover:!bg-green-700 !font-semibold'
+                                icon={<UserAddOutlined />}>Sign Up</Button>
                             </Form.Item>
                         </Form>
                         <div className='flex gap-2'>
-                            <p className='text-gray-500'>Already have an account ?</p>
-                            <Link href="/login">Sign in</Link>
+                            <p className='text-gray-700'>Already have an account ?</p>
+                            <Link href="/login" className='!text-green-700 font-semibold hover:!text-green-900'>Sign in</Link>
                         </div>
                     </div>
                 </Card>

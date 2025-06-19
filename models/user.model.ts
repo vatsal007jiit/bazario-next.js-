@@ -17,12 +17,12 @@ const userSchema = new Schema({
         match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
             'Invalid email']
     },
-    mobile: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
+    // mobile: {
+    //     type: String,
+    //     required: true,
+    //     trim: true,
+    //     unique: true
+    // },
     password: {
         type: String,
         required: true,
@@ -44,12 +44,12 @@ userSchema.pre("save", async function(next){
     next();
 })
 
-userSchema.pre("save", async function(next){
-    const count = await model('User').countDocuments({mobile: this.mobile})
-    if(count > 0)
-        throw next(new Error("Mobile no already exists"))
-    next();
-})
+// userSchema.pre("save", async function(next){
+//     const count = await model('User').countDocuments({mobile: this.mobile})
+//     if(count > 0)
+//         throw next(new Error("Mobile no already exists"))
+//     next();
+// })
 
 userSchema.pre("save", async function(next){
     this.password = await bcrypt.hash(this.password.toString(), 12)

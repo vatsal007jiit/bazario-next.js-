@@ -8,12 +8,17 @@ import Logo from './shared/Logo';
 import Link from 'next/link';
 import { UserAddOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const Layout: React.FC<ChildrenInterface> = ({children}) => {
 
     const pathName = usePathname()
+    const session = useSession()
+    console.log(session)
+
     const blacklists = [
-        '/admin'
+        '/admin',
+        '/user'
     ]
     
     const menus = [
@@ -26,16 +31,12 @@ const Layout: React.FC<ChildrenInterface> = ({children}) => {
     href: '/products'
   },
   {
-    label: 'Carts',
-    href: '/carts'
+    label: 'Cart',
+    href: '/cart'
   },
   {
     label: 'Sign In',
     href: '/login'
-  },
-  {
-    label: 'Sign Up',
-    href: '/signup'
   }]
 
  const isBlacklist = blacklists.some((path)=> pathName.startsWith(path))
@@ -49,7 +50,7 @@ const Layout: React.FC<ChildrenInterface> = ({children}) => {
   return (
     <>
       <AntdRegistry>
-          <nav className="bg-gray-200 shadow-lg px-12 py-3 sticky top-0 left-0 z-10 flex justify-between items-center">
+        <nav className="bg-green-100 shadow-lg px-12 py-3 sticky top-0 left-0 z-10 flex justify-between items-center">
             <Logo/>
             <div className='flex '>
                 {
@@ -64,11 +65,11 @@ const Layout: React.FC<ChildrenInterface> = ({children}) => {
               Sign up
             </Link> */}
             </div>
-        
-          </nav>
-          <div className='w-9/12 mx-auto py-12'>{children}</div>
-          <Footer/>
-        </AntdRegistry>
+      
+        </nav>
+        <div>{children}</div>
+        <Footer/>
+      </AntdRegistry>
     </>
   )
 }

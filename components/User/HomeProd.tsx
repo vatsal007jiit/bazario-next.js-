@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { FC, useEffect, useState } from 'react'
 
-const Products:FC<dataInterface> = ({data }) => {
+const HomeProd:FC<dataInterface> = ({data }) => {
   const [isBrowser, setIsBrowser] = useState(false)
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(8)
@@ -22,7 +22,7 @@ const Products:FC<dataInterface> = ({data }) => {
   
   if(!isBrowser || !data.data)
     return (
-    <div className='!bg-green-300'>
+    <div className='bg-green-300'>
       <div className=' w-9/12 mx-auto p-10 grid grid-cols-4 gap-10'>
           {Array.from({ length: 8 }).map((_, idx) => (
             <Skeleton.Input key={idx} className='bg-white ' active style={{ height: 320 }} block />
@@ -31,15 +31,13 @@ const Products:FC<dataInterface> = ({data }) => {
     </div>)
   
   return (
-    <div className='bg-green-300'>
     <div className='w-9/12 mx-auto'>
-     <div className='lg:grid grid-cols-4 gap-10 pt-10'>
+     <div className='grid grid-cols-4 gap-10 pt-14'>
         {
           data.data.map((item: any, index: number)=>(
-            
             <Card 
               key={index}
-              className='!cursor-default overflow-hidden '
+              className='!cursor-default overflow-hidden'
               hoverable
               cover={
                 <div className='relative w-full h-[320px]'>
@@ -76,7 +74,6 @@ const Products:FC<dataInterface> = ({data }) => {
               </>
               }
             </Card>
-            
           ))
         }
       </div>
@@ -88,8 +85,7 @@ const Products:FC<dataInterface> = ({data }) => {
           />
       </div> 
     </div> 
-    </div> 
   )
 }
 
-export default Products
+export default HomeProd

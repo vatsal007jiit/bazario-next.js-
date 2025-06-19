@@ -4,7 +4,7 @@ import Logo from './shared/Logo';
 const Footer = () => {
   return (
     <>
-      <footer className="bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-10 mt-16 border-t dark:border-gray-700">
+      <footer className="bg-green-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-10  border-t dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         
         {/* Brand */}

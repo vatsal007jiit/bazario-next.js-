@@ -5,12 +5,13 @@ const clientCatchError = (err: unknown) =>{
 
     if(isAxiosError(err))
     {
-        message.error(err.response?.data.message)
+        return message.error(err.response?.data.message)
     }
    if(err instanceof Error)
    {
-    message.error(err.message)
+    return message.error(err.message)
    }
+   message.error("Unknown Error...")
 }
 
 export default clientCatchError

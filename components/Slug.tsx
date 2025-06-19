@@ -17,8 +17,8 @@ const Slug:FC<TitleInterface> = ({data, title}) => {
 
     return (
         <>
-     <div className="max-w-6xl mx-auto px-6">
-      <Card className="shadow-2xl rounded-2xl">
+     <div className="max-w-6xl mx-auto px-6 ">
+      <Card className="shadow-2xl rounded-2xl !bg-green-300 !my-10">
         <div className="flex flex-col md:flex-row gap-10 items-center">
           <div className="w-full md:w-[40%]">
             <Image
@@ -31,7 +31,7 @@ const Slug:FC<TitleInterface> = ({data, title}) => {
           </div>
 
           <div className="w-full md:w-[60%]">
-            <h1 className="text-4xl font-bold text-gray-800">{data.title}</h1>
+            <h1 className="text-4xl font-bold text-green-900">{data.title}</h1>
             <p className="text-slate-600 mt-3 leading-relaxed text-lg">{data.description}</p>
 
             <div className="flex items-center gap-4 mt-6 mb-4 text-2xl font-semibold">
