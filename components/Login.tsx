@@ -1,5 +1,5 @@
 "use client";
-import { Button, Card, Divider, Form, Input } from "antd";
+import { Button, Card, Divider, Form, Input, message } from "antd";
 import Image from "next/image";
 import React from "react";
 import Logo from "./shared/Logo";
@@ -18,14 +18,24 @@ import bg from "@/public/images/bg.jpg";
 const Login = () => {
   const router = useRouter();
   const login = async (value: any)=>{
-        const payload = {
-            ...value,
-            redirect: true,
-            callbackUrl: '/user'
-        }
-        const res = await signIn("credentials", payload)
-        console.log(res)
+    const payload = {
+        ...value,
+        redirect: true,
+        callbackUrl: '/user'
     }
+    const res = await signIn("credentials", payload)
+    message.success("Login Successful")
+    console.log(res)
+  }
+  const signInWithGoogle = async ()=>{
+    const payload = {
+        redirect: true,
+        callbackUrl: '/user'
+    }
+
+    const res = await signIn("google", payload)
+    console.log(res)
+  }
   // const login = async (value: any)=>{
   //     try {
   //         const payload = {
