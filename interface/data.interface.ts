@@ -1,5 +1,11 @@
+// interface dataInterface {
+//     data: any
+// }
 interface dataInterface {
-    data: any
+  data: {
+    data: any[]
+    total: number
+  }
 }
 
 export default dataInterface

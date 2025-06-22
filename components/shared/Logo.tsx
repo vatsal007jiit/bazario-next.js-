@@ -1,5 +1,5 @@
 import React from 'react'
-import logoPic from '@/public/images/logo-gr.avif'
+import logoPic from '@/public/images/logo-gr.png'
 import Image from "next/image";
 
 const Logo = () => {

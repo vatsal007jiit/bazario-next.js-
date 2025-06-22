@@ -22,8 +22,8 @@ export const POST = async (req: NextRequest) =>{
        const payload = {
         id: user._id,
         name: user.fullName,
-        email: user.email
-        
+        email: user.email,
+        role: user.role
        }
        return res.json(payload)
     } 

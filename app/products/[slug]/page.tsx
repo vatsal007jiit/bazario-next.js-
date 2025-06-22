@@ -1,7 +1,6 @@
 import Slug from "@/components/Slug"
 import slugInterface from "@/interface/slug.interface"
 import { Metadata } from "next"
-import { FC } from "react"
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const res = await fetch(`${process.env.SERVER}/api/product/${params.slug}`)
@@ -13,10 +12,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-const SlugRouter:FC<slugInterface> = async ({params}) => {
+const SlugRouter = async ({params}:slugInterface) => {
   
   const {slug} = await params 
-  const slugRes = await fetch(`${process.env.Server}/api/product/${slug}`)
+  const slugRes = await fetch(`${process.env.Server}/api/product/${slug}`) // Warning use try catch here
   const data = slugRes.ok ? await slugRes.json(): null
   return (<Slug data={data.product} title={slug} />)
 }

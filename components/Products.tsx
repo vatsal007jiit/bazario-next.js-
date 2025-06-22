@@ -8,20 +8,13 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
 
-interface newdataInterface {
-  data: {
-    data: any[]
-    total: number
-  }
-}
 
-interface ServerSideProductsProps extends newdataInterface {
+interface ServerSideProductsProps extends dataInterface {
   currentPage: number
   currentLimit: number
-  searchQuery: string
 }
 
-const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit, searchQuery }) => {
+const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit}) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isBrowser, setIsBrowser] = useState(false)
@@ -259,7 +252,7 @@ export default Products
 
 // export default Products
 
-
+//Without pagination code
 
 // 'use client'
 // import dataInterface from '@/interface/data.interface'
@@ -272,16 +265,11 @@ export default Products
 
 // const Products:FC<dataInterface> = ({data }) => {
 //   const [isBrowser, setIsBrowser] = useState(false)
-//   const [page, setPage] = useState(1)
-//   const [limit, setLimit] = useState(8)
 
 //   useEffect(()=>{
 //     setIsBrowser(true)
 //   }, [])
 
-//   const onPaginate = (newPage: number, newLimit?: number) => {
-//      setPage(newPage)
-//   }
   
 //   if(!isBrowser || !data.data)
 //     return (
@@ -343,13 +331,6 @@ export default Products
 //           ))
 //         }
 //       </div>
-//       <div className='flex justify-center w-full mt-10 pb-8'>
-//         <Pagination
-//           total={data.total}
-//           onChange={onPaginate}
-//           current={page}
-//           />
-//       </div> 
 //     </div> 
 //     </div> 
 //   )

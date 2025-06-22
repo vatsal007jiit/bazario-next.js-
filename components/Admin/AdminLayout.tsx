@@ -6,10 +6,18 @@ import { Avatar, Breadcrumb, Dropdown, Layout, Menu } from 'antd'
 import { CreditCardOutlined, LogoutOutlined, ProfileOutlined, SettingOutlined, ShopOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
 
 const { Header, Sider, Content, Footer } = Layout
 
 const AdminLayout:FC<ChildrenInterface> = ({children}) =>{
+
+  const session = useSession()
+  const user = session?.data?.user
+
+  const logout = async () => {
+    await signOut(); 
+  };
 
  const menus= [
     {
@@ -37,19 +45,20 @@ const AdminLayout:FC<ChildrenInterface> = ({children}) =>{
   const dropMenu = {
     items: [
       {
+      key: "email",
+      label: user?.email,
+      disabled: true, // Makes it non-clickable
+      },
+      {
       icon: <ProfileOutlined />,
-      label: "Vatsal Gupta",
-      key: "fullname"
+      label: <Link href="/profile">Profile</Link>,
+      key: "profile"
       },
       {
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: <Link href="/">Logout</Link>,
-      key: "logout"
-      },
-      {
-      icon: <SettingOutlined />,
-      label: <Link href="/profile">Settings</Link>,
-      key: "settings"
+      label: "Logout", // plain text
+      onClick: logout, // call your logout function
       }
     ]
   }
@@ -86,9 +95,13 @@ const AdminLayout:FC<ChildrenInterface> = ({children}) =>{
               Bazario
             </text>
           </svg>
-            <Dropdown menu={dropMenu}>
-            <Avatar size='large' src="/images/avatar.webp"/>
-          </Dropdown>
+            <div className='flex items-center'>
+              <h1 className='text-blue-700 text-lg font-semibold'>Welcome Admin</h1>
+              <Dropdown menu={dropMenu}>
+                <Avatar size='large' src="/images/avatar.webp"/>
+              </Dropdown>
+            </div>
+            
           
         </div>
         

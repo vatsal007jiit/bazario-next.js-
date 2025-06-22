@@ -4,18 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import axios from "axios";
 import { JWT } from "next-auth/jwt";
 
-interface CustomSessionInterface extends Session {
-    user: {
-        id: string
-        email: string
-        name: string
-        gender: string
-    }
-}
-
-interface CustomUserInterface extends User {
-    gender: string
-}
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -54,19 +42,19 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async signIn({user, account}) {
-            const customUser = user as CustomUserInterface
+         
             if(account?.provider === "google")
             {
                 try {
                     const payload = {
-                        email: customUser.email,
+                        email: user.email,
                         provider: 'google'
                     }
                     const {data} = await axios.post(`${process.env.SERVER}/api/user/login`, payload)
-                    customUser.id = data.id
-                    customUser.email = data.email
-                    customUser.name = data.name
-                    customUser.gender = data.gender
+                    user.id = data.id
+                    user.email = data.email
+                    user.name = data.name
+                    user.role = data.role
                     return true
                 }
                 catch(err)
@@ -77,26 +65,26 @@ export const authOptions: NextAuthOptions = {
             return true
         },
         async jwt({token, user}) {
-            const customUser = user as CustomUserInterface
 
-            if(customUser)
+            if(user)
             {
-                token.id = customUser.id
-                token.gender = customUser.gender
+                token.id = user.id
+                token.role = user.role
             }
             return token
         },
         async session({session, token}) {
-            const customSession = session as CustomSessionInterface
+            
             if(token)
             {
-                customSession.user.id = token.id as string
-                customSession.user.gender = token.gender as string
+                session.user.id = token.id as string
+                session.user.role = token.role as string
             }
 
-            return customSession
+            return session
         }
-    }
+    },
+    secret: process.env.NEXTAUTH_SECRET
 }
 
 const handler = NextAuth(authOptions)

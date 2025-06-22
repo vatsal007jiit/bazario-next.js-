@@ -6,6 +6,8 @@ import { NextRequest, NextResponse as res } from "next/server";
 import path from "path";
 import fs from "fs"
 import {v4 as uuid} from "uuid"
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 mongoose.connect(process.env.DB!)
 
@@ -43,6 +45,11 @@ export const GET = async (req: NextRequest, context: slugInterface) =>{
 export const PUT = async (req: NextRequest, context: slugInterface) =>
 {
     try {
+        const session = await getServerSession(authOptions)
+        if(!session || session?.user?.role !=="admin")
+        {
+            return res.json({message:"Unauthorised User"},{status: 401})
+        }
         const {slug: id} = await context.params // so we will send id from frontend in slug variable here we are aliasing it. We can do similar in delete also
         const body = await req.formData()
 
@@ -51,7 +58,7 @@ export const PUT = async (req: NextRequest, context: slugInterface) =>
             description: body.get("description"),
             price: body.get("price"),
             discount: body.get("discount"),
-            quantity: body.get("quantity"),
+            quantity: body.get("quantity")
         }
         const file = body.get('image') as File | null
 
@@ -70,7 +77,9 @@ export const PUT = async (req: NextRequest, context: slugInterface) =>
             fs.writeFileSync(filePath, buffer)
             payload.image = `/products/${fileName}`
         }
+        payload.slug = payload.title.toLowerCase().split(" ").join("-"); // To update slug
         const product = await ProductModel.findByIdAndUpdate(id, payload, {new:true})
+        
 
         if(!product)
             res.json({message: "Product not found"}, {status: 404})
@@ -83,6 +92,12 @@ export const PUT = async (req: NextRequest, context: slugInterface) =>
 
 export const DELETE = async (req: NextRequest, context: slugInterface) =>{
     try{
+        const session = await getServerSession(authOptions)
+        if(!session || session?.user?.role !=="admin")
+        {
+            return res.json({message:"Unauthorised User"},{status: 401})
+        }
+        
         const {slug} = await context.params
         const result = await ProductModel.deleteOne({slug})
         

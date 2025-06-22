@@ -10,25 +10,21 @@
 import Products from "../components/Products"
 
 interface HomePageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     limit?: string
-    search?: string
-  }
+  }>
 }
 
 const HomePage = async ({ searchParams }: HomePageProps) => {
-  const page = searchParams.page || '1'
-  const limit = searchParams.limit || '8'
-  const search = searchParams.search || ''
+  const params = await searchParams
+  const page =  params.page || '1'
+  const limit = params.limit || '8'
   
   // Build query string
   const queryParams = new URLSearchParams()
   queryParams.set('page', page)
   queryParams.set('limit', limit)
-  if (search) {
-    queryParams.set('search', search)
-  }
   
   try {
     const productRes = await fetch(`${process.env.SERVER}/api/product?${queryParams.toString()}`, {
@@ -41,17 +37,16 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
         data={products} 
         currentPage={parseInt(page)}
         currentLimit={parseInt(limit)}
-        searchQuery={search}
       />
     )
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error fetching products:', error)
     return (
       <Products 
         data={{ data: [], total: 0 }} 
         currentPage={1}
         currentLimit={8}
-        searchQuery=""
       />
     )
   }

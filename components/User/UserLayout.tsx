@@ -2,20 +2,24 @@
 import React from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Footer from "@/components/Footer";
-
+import type { MenuProps } from 'antd';
 import ChildrenInterface from '@/interface/children.interface';
 import Link from 'next/link';
 import { LogoutOutlined, ProfileOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/Logo';
 import { Avatar, Dropdown } from 'antd';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
 
     const pathName = usePathname()
     const session = useSession()
     const user = session?.data?.user
+
+    const logout = async () => {
+      await signOut(); 
+    };
 
     function getInitials(name?: string) {
       if (!name) return '';
@@ -37,17 +41,26 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
     href: '/user/cart'
   }]
 
-  const dropMenu = {
+  const dropMenu: MenuProps = {
     items: [
+      {
+      key: "email",
+      label: user?.email,
+      disabled: true, // Makes it non-clickable
+      },
+      {
+        type: 'divider'
+      },
       {
       icon: <ProfileOutlined />,
       label: <Link href="/user/profile">Profile</Link>,
       key: "profile"
       },
       {
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: <Link href="/">Logout</Link>,
-      key: "logout"
+      label: "Logout", // plain text
+      onClick: logout, // call your logout function
       },
     ]
   }

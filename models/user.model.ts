@@ -32,6 +32,7 @@ const userSchema = new Schema({
     }
 }, {timestamps: true})
 
+//Forcing every role to be user [To ensure safety]
 userSchema.pre("save", async function(next){
     this.role = "user"
     next();
@@ -55,8 +56,6 @@ userSchema.pre("save", async function(next){
     this.password = await bcrypt.hash(this.password.toString(), 12)
     next()
 })
-
-
 
 const UserModel = models.User || model('User', userSchema)
 

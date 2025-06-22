@@ -16,16 +16,34 @@ import { useRouter } from "next/navigation";
 import bg from "@/public/images/bg.jpg";
 
 const Login = () => {
-  const router = useRouter();
+
+  const router = useRouter()
+
   const login = async (value: any)=>{
-    const payload = {
-        ...value,
-        redirect: true,
-        callbackUrl: '/user'
+    try {
+      const payload = {
+      ...value,
+      redirect: false,
+      // callbackUrl: '/user'
     }
-    const res = await signIn("credentials", payload)
+    await signIn("credentials", payload)
+    const session = await getSession()
+
+    if(!session)
+      throw new Error("Login Failed")
+
     message.success("Login Successful")
-    console.log(res)
+    const role = session.user.role
+
+    if(role === 'user')
+      router.replace('/user')
+    if(role === 'admin')
+      router.replace('/admin/products')
+    } 
+    catch (error) {
+      clientCatchError(error)
+    }
+    
   }
   const signInWithGoogle = async ()=>{
     const payload = {
