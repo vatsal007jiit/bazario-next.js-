@@ -1,14 +1,32 @@
 'use client'
-import { Card, Skeleton } from 'antd'
+import fetcher from '@/lib/fetcher'
+import { Button, Card, Result, Skeleton } from 'antd'
 import moment from 'moment'
 import Image from 'next/image'
 import React from 'react'
+import useSWR from 'swr'
 
 const Users = () => {
+  const {data, error, isLoading} = useSWR('/api/user',fetcher)
+  console.log(data)
+  if(isLoading)
+    return(<Skeleton active className='col-span-4'/>)
+
+  if(error)
+   { 
+    return (
+      <Result
+        status="500"
+        title="500"
+        subTitle="Sorry, something went wrong."
+        // extra={<Button type="primary">Back Home</Button>}
+      />
+    )
+  }
   return (
     <div className='grid lg:grid-cols-4 md:grid-cols-2 gap-8'>
-        <Skeleton active className='col-span-4'/>
-     {[...Array(12)].map((_,index) => (
+        
+     {data.users.map((user: any, index: number) => (
         <Card key={index} hoverable>
             <div className='flex flex-col items-center gap-6'>
                 <Image src='/images/avatar.webp'
@@ -18,13 +36,13 @@ const Users = () => {
                 className='rounded-full border-2 border-blue-900'
                 objectFit='cover'/>
 
-                <Card.Meta
-                title="Rahul Rajawat"
-                description="rahul@mail.com"/>
+                <Card.Meta 
+                title={<span className="capitalize">{user.fullName}</span>}
+                description={user.email}/>
 
                 <div className='flex flex-col items-center'>
                     <label className='text-gray-500 font-medium'>Total Orders- 4</label>
-                    <label className='text-gray-500 font-medium'>Joined- {moment().format('DD MMM YYYY')}</label>
+                    <label className='text-gray-500 font-medium'>Joined- {moment(user.createdAt).format('DD MMM YYYY')}</label>
                 </div>
             </div>
         </Card>

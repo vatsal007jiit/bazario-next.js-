@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import Logo from '../shared/Logo';
 import { Avatar, Dropdown } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
+import getInitials from '@/lib/getInitials';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
 
@@ -21,12 +22,6 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
       await signOut(); 
     };
 
-    function getInitials(name?: string) {
-      if (!name) return '';
-      const parts = name.trim().split(/\s+/); // Split by any whitespace
-      const initials = parts.slice(0, 2).map(word => word[0].toUpperCase()).join('');
-      return initials;
-    }
     const menus = [
   {
     label: 'Home',

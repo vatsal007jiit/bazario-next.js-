@@ -143,7 +143,7 @@ const Products = () => {
         status="500"
         title="500"
         subTitle="Sorry, something went wrong."
-        extra={<Button type="primary">Back Home</Button>}
+        // extra={<Button type="primary">Back Home</Button>}
       />
     )
   }

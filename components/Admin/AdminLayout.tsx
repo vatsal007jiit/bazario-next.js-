@@ -123,7 +123,8 @@ const AdminLayout:FC<ChildrenInterface> = ({children}) =>{
         <Menu
           mode="inline"
           theme='dark'
-          defaultSelectedKeys={['products']}
+          // defaultSelectedKeys={['products']}
+          selectedKeys={[pathName.split("/")[2]]} // gets 'products', 'orders', etc
           style={{ height: '100%', borderRight: 0 }}
           items = {menus}
         />

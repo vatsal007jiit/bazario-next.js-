@@ -28,6 +28,6 @@ export const POST = async (req: NextRequest) =>{
        return res.json(payload)
     } 
     catch (error) {
-        serverCatchError(error)
+       return serverCatchError(error)
     }
 }

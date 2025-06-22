@@ -1,75 +1,45 @@
 'use client'
 
-import { Avatar, Select, Skeleton, Table } from 'antd'
+import calcPrice from '@/lib/calcPrice'
+import clientCatchError from '@/lib/client-catch-error'
+import fetcher from '@/lib/fetcher'
+import getInitials from '@/lib/getInitials'
+import '@ant-design/v5-patch-for-react-19';
+import { Avatar, message, Result, Select, Skeleton, Table } from 'antd'
+import axios from 'axios'
 import moment from 'moment'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import useSWR, { mutate } from 'swr'
 
 const Orders = () => {
 
-  const data = [
-  {
-    "orderId": "ORD1001",
-    "userId": "USR001",
-    "product": {
-      "productId": "P001",
-      "productName": "Wireless Mouse",
-      "quantity": 2,
-      "price": 29.99
-    },
-    "totalAmount": 59.98,
-    "status": "pending",
-    "createdAt": "2025-06-05T10:00:00Z"
-  },
-  {
-    "orderId": "ORD1002",
-    "userId": "USR002",
-    "product": {
-      "productId": "P003",
-      "productName": "Bluetooth Headphones",
-      "quantity": 1,
-      "price": 59.99
-    },
-    "totalAmount": 59.99,
-    "status": "success",
-    "createdAt": "2025-06-04T12:45:00Z"
-  },
-  {
-    "orderId": "ORD1003",
-    "userId": "USR003",
-    "product": {
-      "productId": "P002",
-      "productName": "USB-C Charger",
-      "quantity": 3,
-      "price": 29.99
-    },
-    "totalAmount": 89.97,
-    "status": "error",
-    "createdAt": "2025-06-03T14:30:00Z"
-  },
-  {
-    "orderId": "ORD1004",
-    "userId": "USR004",
-    "product": {
-      "productId": "P004",
-      "productName": "Laptop Stand",
-      "quantity": 1,
-      "price": 49.99
-    },
-    "totalAmount": 49.99,
-    "status": "warning",
-    "createdAt": "2025-06-02T16:00:00Z"
-  }]
+  const {data, isLoading, error} = useSWR('/api/order', fetcher)
+   const [isBrowser, setIsBrowser] = useState(false)
+  
+    useEffect(() => {
+      setIsBrowser(true)
+    }, [])
 
-  const columns = [
+    const changeStatus = async (status: string, id: string)=>{
+      try {
+        const {data} = await axios.put(`/api/order/${id}`, {status})
+        message.success(data.message)
+        mutate('/api/order')
+      } 
+      catch (error) {
+        clientCatchError(error)
+      }
+    }
+    const columns = [
     {
       title : "Customer",
       key: "customer",
-      render:()=>(
+      render:(item: any)=>(
         <div className='flex gap-3'>
-          <Avatar size="large" className='bg-orange-500!'>R</Avatar>
+          <Avatar size="large" className='bg-orange-500!'>{getInitials(item.user.fullName)}</Avatar>
           <div>
-            <h1 className='font-medium'>Rahul Rajawat</h1>
-            <label className='text-gray-500'>rahul@mail.com</label>
+            <h1 className='font-medium capitalize'>{item.user.fullName}</h1>
+            <label className='text-gray-500'>{item.user.email}</label>
           </div>
         </div>
       )
@@ -78,28 +48,28 @@ const Orders = () => {
       title: "Product",
       key: "product",
       render: (item: any)=>(
-        <label>{item.product.productName}</label>
+        <label>{item.product.title}</label>
       )
     },
     {
       title: "Price",
       key: "price",
       render: (item: any)=>(
-        <label>₹{item.product.price}</label>
+        <label>₹{calcPrice(item.price, item.discount) }</label>
       )
     },
     {
       title: 'Address',
       key: 'address',
-      render: ()=>(
-        <label className='text-gray-500'>1234 Elm Street, Apt 56B, Springfield, IL 62704, USA</label>
+      render: (item: any)=>(
+        <label className='text-gray-500'>{item.user?.address || "Not available"}</label>
       )
     },
     {
       title: "Status",
       key: "status",
-      render: ()=>(
-        <Select placeholder="Status" style={{width: 120}}>
+      render: (item: any)=>(
+        <Select placeholder="Status" style={{width: 120}} defaultValue={item.status} onChange={(value)=>changeStatus(value, item._id)}>
           <Select.Option value="fulfiled">Fulfiled</Select.Option>
           <Select.Option value="processing">Processing</Select.Option>
           <Select.Option value="dispatched">Dispatched</Select.Option>
@@ -116,13 +86,27 @@ const Orders = () => {
     }
   ]
 
+   if(isLoading)
+    return(<Skeleton active className='col-span-4'/>)
+
+  if(error)
+   { 
+    return (
+      <Result
+        status="500"
+        title="500"
+        subTitle="Sorry, something went wrong."
+        // extra={<Button type="primary">Back Home</Button>}
+      />
+    )
+  }
+
   return (
     <div className='space-y-8'>
-      <Skeleton active />
       <Table 
-        columns={columns}
-        dataSource={data}
-        rowKey="orderId"
+        columns= {columns}
+        dataSource= {data.orders}
+        rowKey= "_id"
       />
     </div>
   )

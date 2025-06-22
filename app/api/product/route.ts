@@ -52,7 +52,7 @@ export const POST = async (req: NextRequest) =>{
         return res.json(product)
     } 
     catch (error) {
-        serverCatchError(error)
+      return  serverCatchError(error)
     }
 }
 
@@ -85,6 +85,6 @@ export const GET = async (req: NextRequest) =>{
         return res.json({total, data:products})
     }
     catch(error){
-        serverCatchError(error)
+        return serverCatchError(error)
     }
 }

@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest, context: slugInterface) =>{
         return res.json({product})
     }
     catch(error){
-        serverCatchError(error)
+       return serverCatchError(error)
     }
 }
 
@@ -86,7 +86,7 @@ export const PUT = async (req: NextRequest, context: slugInterface) =>
         return res.json({product})
     } 
     catch (error) {
-        serverCatchError(error)
+       return serverCatchError(error)
     }
 }
 
@@ -107,6 +107,6 @@ export const DELETE = async (req: NextRequest, context: slugInterface) =>{
         return res.json({message: "Product deleted successfully"})
     }
     catch(error){
-        serverCatchError(error)
+       return serverCatchError(error)
     }
 }
