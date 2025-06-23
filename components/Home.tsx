@@ -1,13 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { ChevronDown, Star, Check, ArrowRight, Play, Zap, Shield, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import avatar from "/public/images/avatar-vg.jpg"
+import { ChevronDown, Star, ArrowRight, Play, Zap, Shield, ChevronLeft, ChevronRight, LeafyGreen } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 export default function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isBrowser, setIsBrowser] = useState(false)
+  
+  useEffect(() => {
+    setIsBrowser(true)
+  }, [])
    const heroImages = [
     {
       src: "https://greenatva.com/cdn/shop/files/Beige_Photo_Collage_Personal_Mood_Board_Facebook_Video.gif?v=1725707420&width=3840",
@@ -52,6 +56,18 @@ export default function Home() {
     {
       src: "/images/littleKit.webp",
       alt: "Little Kit"
+    },
+    {
+      src: "/images/review1.webp",
+      alt: "Reviews-Mia"
+    },
+    {
+      src: "/images/review2.webp",
+      alt: "Reviews-Lori"
+    },
+    {
+      src: "/images/review3.webp",
+      alt: "Reviews-Kavach"
     }
   ];
 
@@ -83,24 +99,24 @@ export default function Home() {
       rating: 5
     },
     {
-      name: "Shruti",
-      role: "Entrepreneur",
-      image: "/images/avatar-sa.jpg", 
-      text: "I've tried many solutions before, but nothing comes close to the effectiveness and ease of use of this product.",
-      rating: 5
-    },
-    {
       name: "Vatsal Gupta",
       role: "Enterpreneur",
       image: "/images/avatar-vg.jpg",
       text: "The quality is outstanding and the support team is incredibly responsive. Highly recommend to anyone!",
+      rating: 5
+    },
+    {
+      name: "Shruti",
+      role: "Entrepreneur",
+      image: "/images/avatar-sa.jpg", 
+      text: "I've tried many solutions before, but nothing comes close to the effectiveness and ease of use of this product.",
       rating: 5
     }
   ];
 
   const features = [
     {
-      icon: <Heart className="w-8 h-8" />,
+      icon: <LeafyGreen className="w-8 h-8" />,
       title: "Natural & Safe",
       description: "Made with premium natural ingredients, safe for daily use without harmful side effects."
     },
@@ -210,7 +226,7 @@ export default function Home() {
           {/* Fallback content if image fails */}
           <div className="absolute inset-0 flex items-center justify-center text-white bg-gradient-to-br from-green-300 to-green-500" style={{display: 'none'}}>
             <div className="text-center">
-              <Heart className="w-24 h-24 mx-auto mb-4 animate-pulse" />
+              <LeafyGreen className="w-24 h-24 mx-auto mb-4 animate-pulse" />
               <h3 className="text-2xl font-bold">Premium Quality</h3>
               <p className="text-green-100 mt-2">100% Natural Ingredients</p>
             </div>

@@ -5,12 +5,14 @@ import Footer from "@/components/Footer";
 import type { MenuProps } from 'antd';
 import ChildrenInterface from '@/interface/children.interface';
 import Link from 'next/link';
-import { LogoutOutlined, ProfileOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, ProfileOutlined, ShoppingCartOutlined, ShoppingFilled, ShoppingOutlined, ShoppingTwoTone, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/Logo';
-import { Avatar, Dropdown } from 'antd';
+import { Avatar, Badge, Dropdown, Tooltip } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
 import getInitials from '@/lib/getInitials';
+import useSWR from 'swr';
+import fetcher from '@/lib/fetcher';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
    const [isBrowser, setIsBrowser] = useState(false)
@@ -19,15 +21,17 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
     setIsBrowser(true)
   }, [])
   
-    const pathName = usePathname()
-    const session = useSession()
-    const user = session?.data?.user
+  const {data} = useSWR('/api/cart?count=true', fetcher)
+  
+  const pathName = usePathname()
+  const session = useSession()
+  const user = session?.data?.user
 
-    const logout = async () => {
-      await signOut(); 
-    };
+  const logout = async () => {
+    await signOut(); 
+  };
 
-    const menus = [
+  const menus = [
   {
     label: 'Home',
     href: '/user'
@@ -35,10 +39,6 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
   {
     label: 'Orders',
     href: '/user/orders'
-  },
-  {
-    label: 'Cart',
-    href: '/user/cart'
   }]
 
   const dropMenu: MenuProps = {
@@ -82,14 +82,20 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
                 }
                 </div>
                 <div>
-                  <Dropdown menu={dropMenu}>
-                    {/* <Avatar size='large' className='!bg-green-300' src="/images/avatar.webp"/> */}
-                    <Avatar size='large' className='!bg-green-700 font-semibold'>{getInitials(user?.name!) || <UserOutlined />}</Avatar>
-                  </Dropdown>
+                  <Link href="/user/cart" className="inline-block">
+                    <Tooltip title="My Cart">
+                      <Badge count={data && data.count} color='brown'>
+                        <ShoppingOutlined className="text-3xl !text-green-700 cursor-pointer" />
+                      </Badge>
+                    </Tooltip>
+                  </Link>
                 </div>
-                
-            </div>
-        
+                <div>
+                  <Dropdown menu={dropMenu}>
+                    <Avatar size='large' className='!bg-green-700 font-semibold'>{getInitials(user?.name!) || <UserOutlined />}</Avatar>
+                 </Dropdown>
+                </div>
+              </div>
           </nav>
           <div className='bg-green-300'>{children}</div>
           <Footer/>

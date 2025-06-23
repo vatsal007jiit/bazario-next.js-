@@ -3,7 +3,7 @@ import dataInterface from '@/interface/data.interface'
 import calcPrice from '@/lib/calcPrice'
 import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, Pagination, Skeleton, Tag } from 'antd'
+import { Button, Card, message, Pagination, Skeleton, Tag } from 'antd'
 import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
 import '@ant-design/v5-patch-for-react-19';
 import { useSession } from 'next-auth/react'
+import { mutate } from 'swr'
 
 interface ServerSideProductsProps extends dataInterface {
   currentPage: number
@@ -24,10 +25,10 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   useEffect(() => {
     setIsBrowser(true)
   }, [])
-  
+
   const router = useRouter()
   const searchParams = useSearchParams()
-  const session = useSession();
+  // const session = useSession();
   const onPaginate = (newPage: number, newLimit?: number) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('page', newPage.toString())
@@ -42,13 +43,10 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
 
   const addToCart = async (id : string) =>{
     try {
-      const userId = session?.data?.user.id
-      const payload = {
-        user: userId,
-        product: id
-      }
-      const {data} = await axios.post('/api/cart', payload )
-      console.log(data)  
+
+      const {data} = await axios.post('/api/cart', {product: id})
+      mutate('/api/cart?count=true') // To update Cart count
+      message.success("Product Added to Cart") 
     } 
     catch (error) {
       clientCatchError(error)
