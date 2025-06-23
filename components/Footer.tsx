@@ -4,7 +4,7 @@ import Logo from './shared/Logo';
 const Footer = () => {
   return (
     <>
-      <footer className="bg-green-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-10  border-t dark:border-gray-700">
+      <footer className="bg-green-200 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-10  border-t dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         
         {/* Brand */}
@@ -14,8 +14,10 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold mb-3">Shop</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:underline">Men</a></li>
-            <li><a href="#" className="hover:underline">Women</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Men</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Women</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Wellness Roll-ons</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Fragrances</a></li>
           </ul>
         </div>
 
@@ -23,10 +25,10 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold mb-3">Company</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:underline">About Us</a></li>
-            <li><a href="#" className="hover:underline">Careers</a></li>
-            <li><a href="#" className="hover:underline">Blog</a></li>
-            <li><a href="#" className="hover:underline">Contact</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">About Us</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Careers</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Blog</a></li>
+            <li><a href="#" className="hover:underline hover:text-green-700 transition-colors">Contact</a></li>
           </ul>
         </div>
 

@@ -32,8 +32,9 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
     }
     
     // Navigate to new URL - this will trigger server-side re-render
-    router.push(`/?${params.toString()}`)
+    router.push(`/products?${params.toString()}`)
   }
+
 
   if (!isBrowser || !data?.data) {
     return (
@@ -89,10 +90,12 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
                 </Button>
               ) : (
                 <>
+                <Link href={'/login'}>
                   <Button icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
                     Add to cart
                   </Button>
-                  <Link href={`/products/${item.title.toLowerCase().split(" ").join("-")}`}>
+                  </Link>
+                  <Link href={'/login'}>
                     <Button type="primary" className='!w-full !bg-green-600 hover:!bg-green-700'>
                       Buy now
                     </Button>

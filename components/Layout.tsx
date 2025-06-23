@@ -32,12 +32,12 @@ const Layout: React.FC<ChildrenInterface> = ({children}) => {
     href: '/products'
   },
   {
-    label: 'Cart',
-    href: '/cart'
-  },
-  {
     label: 'Sign In',
     href: '/login'
+  },
+  {
+    label: 'Sign Up',
+    href: '/sign-up'
   }]
 
  const isBlacklist = blacklists.some((path)=> pathName.startsWith(path))
