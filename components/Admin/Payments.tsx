@@ -10,7 +10,6 @@ import getInitials from '@/lib/getInitials'
 const Payments = () => {
 
   const {data, isLoading, error} = useSWR('/api/payment', fetcher)
-  console.log(data)
   const [isBrowser, setIsBrowser] = useState(false)
     
       useEffect(() => {

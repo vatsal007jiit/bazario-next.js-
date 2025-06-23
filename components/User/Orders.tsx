@@ -2,10 +2,14 @@
 
 import { Avatar, Select, Skeleton, Table } from 'antd'
 import moment from 'moment'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Orders = () => {
-
+   const [isBrowser, setIsBrowser] = useState(false)
+      
+  useEffect(() => {
+    setIsBrowser(true)
+  }, [])
   const data = [
   {
     "orderId": "ORD1001",

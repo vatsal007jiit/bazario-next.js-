@@ -1,13 +1,16 @@
 'use client'
 import dataInterface from '@/interface/data.interface'
 import calcPrice from '@/lib/calcPrice'
+import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { Button, Card, Pagination, Skeleton, Tag } from 'antd'
+import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
-
+import '@ant-design/v5-patch-for-react-19';
+import { useSession } from 'next-auth/react'
 
 interface ServerSideProductsProps extends dataInterface {
   currentPage: number
@@ -15,14 +18,16 @@ interface ServerSideProductsProps extends dataInterface {
 }
 
 const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit}) => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  
   const [isBrowser, setIsBrowser] = useState(false)
 
   useEffect(() => {
     setIsBrowser(true)
   }, [])
-
+  
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const session = useSession();
   const onPaginate = (newPage: number, newLimit?: number) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('page', newPage.toString())
@@ -33,6 +38,21 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
     
     // Navigate to new URL - this will trigger server-side re-render
     router.push(`/user/?${params.toString()}`)
+  }
+
+  const addToCart = async (id : string) =>{
+    try {
+      const userId = session?.data?.user.id
+      const payload = {
+        user: userId,
+        product: id
+      }
+      const {data} = await axios.post('/api/cart', payload )
+      console.log(data)  
+    } 
+    catch (error) {
+      clientCatchError(error)
+    }
   }
 
   if (!isBrowser || !data?.data) {
@@ -89,7 +109,7 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
                 </Button>
               ) : (
                 <>
-                  <Button icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
+                  <Button onClick={()=>addToCart(item._id)} icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
                     Add to cart
                   </Button>
                   <Link href={`/products/${item.title.toLowerCase().split(" ").join("-")}`}>

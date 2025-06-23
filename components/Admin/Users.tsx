@@ -3,12 +3,17 @@ import fetcher from '@/lib/fetcher'
 import { Button, Card, Result, Skeleton } from 'antd'
 import moment from 'moment'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
 const Users = () => {
   const {data, error, isLoading} = useSWR('/api/user',fetcher)
-  console.log(data)
+  const [isBrowser, setIsBrowser] = useState(false)
+    
+      useEffect(() => {
+        setIsBrowser(true)
+      }, [])
+  
   if(isLoading)
     return(<Skeleton active className='col-span-4'/>)
 

@@ -21,7 +21,11 @@ const Products = () => {
   const [editId, setEditId] = useState<string | null> (null)
   const {data, error, isLoading} = useSWR(`/api/product?page=${page}&limit=${limit}`, fetcher)
   const [products, setProducts] = useState({data: [], total: 0})
-
+  const [isBrowser, setIsBrowser] = useState(false)
+    
+      useEffect(() => {
+        setIsBrowser(true)
+      }, [])
   useEffect(()=>{
     if(data)
       {

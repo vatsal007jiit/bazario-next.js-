@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Footer from "@/components/Footer";
 import type { MenuProps } from 'antd';
@@ -13,7 +13,12 @@ import { signOut, useSession } from 'next-auth/react';
 import getInitials from '@/lib/getInitials';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
-
+   const [isBrowser, setIsBrowser] = useState(false)
+      
+  useEffect(() => {
+    setIsBrowser(true)
+  }, [])
+  
     const pathName = usePathname()
     const session = useSession()
     const user = session?.data?.user

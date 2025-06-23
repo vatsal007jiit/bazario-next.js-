@@ -1,7 +1,7 @@
 "use client";
 import { Button, Card, Divider, Form, Input, message } from "antd";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./shared/Logo";
 import {
   ArrowRightOutlined,
@@ -16,7 +16,13 @@ import { useRouter } from "next/navigation";
 import bg from "@/public/images/bg.jpg";
 
 const Login = () => {
-
+  
+  const [isBrowser, setIsBrowser] = useState(false)
+    
+      useEffect(() => {
+        setIsBrowser(true)
+      }, [])
+      
   const router = useRouter()
 
   const login = async (value: any)=>{
@@ -52,7 +58,6 @@ const Login = () => {
     }
 
     const res = await signIn("google", payload)
-    console.log(res)
   }
   // const login = async (value: any)=>{
   //     try {

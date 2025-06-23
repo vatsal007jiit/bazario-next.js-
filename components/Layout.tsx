@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Footer from "@/components/Footer";
 
@@ -8,13 +8,14 @@ import Logo from './shared/Logo';
 import Link from 'next/link';
 import { UserAddOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 const Layout: React.FC<ChildrenInterface> = ({children}) => {
-
+    const [isBrowser, setIsBrowser] = useState(false)
+      
+    useEffect(() => {
+      setIsBrowser(true)
+    }, [])
     const pathName = usePathname()
-    const session = useSession()
-    console.log(session)
 
     const blacklists = [
         '/admin',
