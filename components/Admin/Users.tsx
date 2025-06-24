@@ -5,6 +5,7 @@ import moment from 'moment'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
+import '@ant-design/v5-patch-for-react-19';
 
 const Users = () => {
   const {data, error, isLoading} = useSWR('/api/user',fetcher)

@@ -39,7 +39,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   if (!isBrowser || !data?.data) {
     return (
       <div className='!bg-green-300'>
-        <div className=' w-9/12 mx-auto p-10 grid grid-cols-4 gap-10'>
+        <div className='w-11/12 sm:w-10/12 mx-auto p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10'>
           {Array.from({ length: currentLimit }).map((_, idx) => (
             <Skeleton.Input key={idx} className='bg-white ' active style={{ height: 320 }} block />
           ))}
@@ -51,7 +51,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   return (
     <div className='bg-green-300'>
       <div className='w-9/12 mx-auto'>
-        <div className='lg:grid grid-cols-4 gap-10 pt-10'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 pt-10'>
           {data.data.map((item: any, index: number) => (
             <Card
               key={`${item._id || item.id}-${currentPage}-${index}`}

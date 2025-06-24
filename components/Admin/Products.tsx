@@ -11,6 +11,7 @@ import fetcher from '@/lib/fetcher'
 import {debounce} from 'lodash'
 import clientCatchError from '@/lib/client-catch-error'
 import calcPrice from '@/lib/calcPrice'
+import '@ant-design/v5-patch-for-react-19';
 
 const Products = () => {
   const [prodForm] = Form.useForm()
@@ -165,7 +166,7 @@ const Products = () => {
         <Button onClick={openModal} type='primary' size='large'>Add Product +</Button>
       </div>
 
-      <div className='grid grid-cols-4 gap-8'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10'>
         {products.data.map((item: any, index: number)=>(
           <Card 
           key={index}

@@ -51,23 +51,18 @@ const Layout: React.FC<ChildrenInterface> = ({children}) => {
   return (
     <>
       <AntdRegistry>
-        <nav className="bg-green-100 shadow-lg px-12 py-3 sticky top-0 left-0 z-10 flex justify-between items-center">
-            <Logo/>
-            <div className='flex '>
-                {
-                    menus.map((item,index)=>(
-                        <Link key={index} href={item.href} className='p-3 rounded-2xl text-green-700 font-semibold hover:bg-green-700 hover:text-white'>
-                            {item.label}
-                        </Link>
-                    ))
-                }
-                {/* <Link href="/signup" className='p-3 border-2 rounded-2xl text-green-700 font-semibold hover:bg-green-700 hover:text-white'>
-              <UserAddOutlined className='mr-2' />
-              Sign up
-            </Link> */}
-            </div>
-      
-        </nav>
+        <nav className="bg-green-100 shadow-lg px-4 sm:px-12 py-3 sticky top-0 left-0 z-10 flex justify-between items-center flex-wrap">
+          <Logo />
+          <div className='flex flex-wrap gap-2'>
+            {
+              menus.map((item,index)=>(
+                <Link key={index} href={item.href} className='p-2 sm:p-3 rounded-2xl text-green-700 font-semibold hover:bg-green-700 hover:text-white text-sm sm:text-base'>
+                  {item.label}
+                </Link>
+              ))
+            }
+          </div>
+          </nav>
         <div>{children}</div>
         <Footer/>
       </AntdRegistry>
