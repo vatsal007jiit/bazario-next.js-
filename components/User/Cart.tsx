@@ -1,6 +1,6 @@
 'use client'
 import fetcher from '@/lib/fetcher'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Button, Card, Empty, message, Result, Skeleton, Space, Typography } from 'antd'
 import useSWR, { mutate } from 'swr'
 import Image from 'next/image'
@@ -8,23 +8,35 @@ import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import clientCatchError from '@/lib/client-catch-error'
 import axios from 'axios'
 import calcPrice from '@/lib/calcPrice'
+import '@ant-design/v5-patch-for-react-19';
+
+import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { useSession } from 'next-auth/react'
+
+interface ModifiedRazorpayInterface extends RazorpayOrderOptions {
+  notes?: any
+}
+
 
 const Cart = () => {
   const [isBrowser, setIsBrowser] = useState(false)
   const [loading, setLoading] = useState({ state: false, index: 0, buttonIndex: 0 })
+  const { Razorpay } = useRazorpay();
 
   useEffect(() => {
     setIsBrowser(true)
   }, [])
 
   const { data, isLoading, error } = useSWR('/api/cart', fetcher)
-
+  const session = useSession()
+  
   const updateQnt = async (num: number, id: string, index: number, buttonIndex: number) => {
     try {
       setLoading({ state: true, index, buttonIndex })
       await axios.put(`/api/cart/${id}`, { qnt: num })
       message.success('Item updated successfully')
       mutate('/api/cart')
+      mutate('/api/cart?count=true') //For Bag in header update
     } catch (error) {
       clientCatchError(error)
     } finally {
@@ -38,6 +50,7 @@ const Cart = () => {
       await axios.delete(`/api/cart/${id}`)
       message.success('Item removed from cart')
       mutate('/api/cart')
+      mutate('/api/cart?count=true') //For Bag in header update
     } catch (err) {
       clientCatchError(err)
     } finally {
@@ -52,6 +65,77 @@ const Cart = () => {
       sum += amount
     }
     return sum
+  }
+
+  const getOrderPayload = ()=>{
+    const products = []
+    const prices = []
+    const discounts = []
+    const quantities = []
+
+    // if(!isArr)
+    // {
+    //   return {
+    //     products: [product._id],
+    //     prices: [product.price],
+    //     discounts: [product.discount],
+    //     quantities: [1]
+    //   }
+    // }
+
+    for(let item of data)
+    {
+      products.push(item.product._id)
+      prices.push(item.product.price)
+      discounts.push(item.product.discount)
+      quantities.push(item.qnt)
+    }
+    return {
+      products,
+      prices,
+      discounts,
+      quantities
+    }
+  }
+  const payNow = async(amount: number) => {
+    try {
+      console.log(getOrderPayload())
+     const {data} = await axios.post('/api/razorpay/order', {amount} )
+     console.log(data)
+
+     const options: ModifiedRazorpayInterface = {
+          name: "Ecom Shops",
+          description: "Bulk Product",
+          amount: data.amount,
+          order_id: data.id,
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+          currency: 'INR',
+          prefill: {
+            name: session?.data?.user?.name as string,
+            email: session?.data?.user?.email as string,
+            contact: "9999999999"
+          },
+          notes: {
+            name: session?.data?.user.name as string,
+            user: session?.data?.user.id,
+            orders: JSON.stringify(getOrderPayload())
+          },
+          handler: ()=>{
+            console.log("success")
+          }
+      }; 
+
+     const rzp = new Razorpay(options)
+      rzp.open()
+
+      rzp.on("payment.failed", ()=>{
+        console.log("Failed")
+      })
+
+    } 
+    catch (error) {
+      clientCatchError(error)
+    }
   }
 
   if (!isBrowser || isLoading) return <Skeleton active className="p-6" />
@@ -86,76 +170,96 @@ const Cart = () => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-bold text-green-800 text-center pt-8 mb-6 border-b-2 border-green-400 inline-block w-fit mx-auto pb-2">
         Your Cart
       </h2>
 
-      <div className="w-full max-w-4xl flex flex-col gap-6 px-4">
-        {data.map((item: any, index: number) => (
-          <Card key={index} hoverable className="!p-4 rounded-xl">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              {/* Left: Image and Product Info */}
-              <div className="flex gap-4 items-start">
-                <Image
-                  src={item.product.image}
-                  width={70}
-                  height={70}
-                  alt={item.product.title}
-                  className="object-contain w-[70px] h-[70px]"
-                />
-                <div>
-                  <h1 className="text-lg font-semibold capitalize">{item.product.title}</h1>
-                  <div className="flex items-center gap-2 text-sm flex-wrap">
-                    <span className="text-green-700 font-bold">
-                      ₹{calcPrice(item.product.price, item.product.discount)}
-                    </span>
-                    <del className="text-gray-500">₹{item.product.price}</del>
-                    <span className="text-gray-600">({item.product.discount}% Off)</span>
+      <div className="w-full max-w-7xl px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Section - Cart Items */}
+        <div className="lg:col-span-2 flex flex-col gap-4">
+          {
+            data.map((item: any, index: number) => (
+              <Card key={index} hoverable className="!p-4 rounded-xl bg-white shadow-sm">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="flex gap-4 items-start">
+                    <Image
+                      src={item.product.image}
+                      width={70}
+                      height={70}
+                      alt={item.product.title}
+                      className="object-contain w-[70px] h-[70px]"
+                    />
+                    <div>
+                      <h1 className="text-lg font-semibold capitalize">{item.product.title}</h1>
+                      <div className="flex items-center gap-2 text-sm flex-wrap">
+                        <span className="text-green-700 font-bold">
+                          ₹{calcPrice(item.product.price, item.product.discount)}
+                        </span>
+                        <del className="text-gray-500">₹{item.product.price}</del>
+                        <span className="text-gray-600">({item.product.discount}% Off)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap justify-start md:justify-end gap-2">
+                    <Button
+                      icon={<MinusOutlined />}
+                      size="middle"
+                      loading={loading.state && loading.index === index && loading.buttonIndex === 0}
+                      onClick={() => updateQnt(item.qnt - 1, item._id, index, 0)}
+                    />
+                    <Button size="middle" disabled>{item.qnt}</Button>
+                    <Button
+                      icon={<PlusOutlined />}
+                      size="middle"
+                      loading={loading.state && loading.index === index && loading.buttonIndex === 1}
+                      onClick={() => updateQnt(item.qnt + 1, item._id, index, 1)}
+                    />
+                    <Button
+                      icon={<DeleteOutlined />}
+                      danger
+                      size="middle"
+                      loading={loading.state && loading.index === index && loading.buttonIndex === 2}
+                      onClick={() => removeCart(item._id, index, 2)}
+                    />
                   </div>
                 </div>
-              </div>
+              </Card>
+            ))
+          }
+        </div>
 
-              {/* Right: Quantity Controls */}
-              <div className="flex flex-wrap justify-start md:justify-end gap-2">
-                <Button
-                  icon={<MinusOutlined />}
-                  size="middle"
-                  loading={loading.state && loading.index === index && loading.buttonIndex === 0}
-                  onClick={() => updateQnt(item.qnt - 1, item._id, index, 0)}
-                />
-                <Button size="middle" disabled>{item.qnt}</Button>
-                <Button
-                  icon={<PlusOutlined />}
-                  size="middle"
-                  loading={loading.state && loading.index === index && loading.buttonIndex === 1}
-                  onClick={() => updateQnt(item.qnt + 1, item._id, index, 1)}
-                />
-                <Button
-                  icon={<DeleteOutlined />}
-                  danger
-                  size="middle"
-                  loading={loading.state && loading.index === index && loading.buttonIndex === 2}
-                  onClick={() => removeCart(item._id, index, 2)}
-                />
-              </div>
+        {/* Right Section - Summary */}
+        <div className="sticky top-20 h-fit">
+          <div className="bg-white border border-green-300 rounded-xl shadow p-6 flex flex-col gap-4">
+            <h2 className="text-xl font-semibold text-green-800 border-b pb-2">Order Summary</h2>
+
+            <div className="flex justify-between text-gray-700">
+              <span>Items Total</span>
+              <span>₹{getTotalAmount().toLocaleString()}</span>
             </div>
-          </Card>
-        ))}
 
-        {/* Divider */}
-        <div className="border-t border-green-800 my-4"></div>
+            <div className="flex justify-between text-gray-700">
+              <span>Delivery Fee</span>
+              <span className="text-green-600 font-medium">₹50</span>
+            </div>
 
-        {/* Total Section */}
-        <div className="flex justify-center pb-8">
-          <div className="bg-white border border-green-300 rounded-xl shadow p-6 w-full max-w-xl flex flex-col gap-4">
-            <h1 className="text-2xl text-center font-bold text-green-800">
-              Total payable amount: ₹{getTotalAmount().toLocaleString()}
-            </h1>
+            <hr />
 
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg w-full transition">
+            <div className="flex justify-between text-xl font-bold text-green-900">
+              <span>Total Payable</span>
+              <span>₹{(getTotalAmount() + 50).toLocaleString()}</span>
+            </div>
+
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => payNow(getTotalAmount() + 50)}
+              className="!w-full !py-6 !font-medium !text-lg !bg-green-600 hover:!bg-green-700"
+            >
               Pay Now
-            </button>
+            </Button>
           </div>
         </div>
       </div>

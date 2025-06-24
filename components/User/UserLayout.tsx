@@ -26,7 +26,6 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
   const pathName = usePathname()
   const session = useSession()
   const user = session?.data?.user
-
   const logout = async () => {
     await signOut(); 
   };

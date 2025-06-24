@@ -2,8 +2,9 @@ import Slug from "@/components/Slug"
 import slugInterface from "@/interface/slug.interface"
 import { Metadata } from "next"
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const res = await fetch(`${process.env.SERVER}/api/product/${params.slug}`)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const res = await fetch(`${process.env.SERVER}/api/product/${slug}`)
   const data = await res.json()
 
   return {

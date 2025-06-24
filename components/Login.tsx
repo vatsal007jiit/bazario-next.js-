@@ -105,7 +105,7 @@ const Login = () => {
                 label="Email"
                 name="email"
                 className="font-semibold"
-                rules={[{ required: true, type: "email" }]}
+                rules={[{ required: true, type: "email",message: "Please enter valid E-mail !" }]}
               >
                 <Input size="large" placeholder="email@example.com" />
               </Form.Item>
