@@ -1,12 +1,16 @@
 'use client'
 
 import calcPrice from '@/lib/calcPrice'
+import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, Empty, Tag } from 'antd'
+import { Button, Card, Empty, message, Tag } from 'antd'
+import axios from 'axios'
 import Image from 'next/image'
-import Link from 'next/link'
 import React, { FC, useEffect, useState } from 'react'
+import { mutate } from 'swr'
 import '@ant-design/v5-patch-for-react-19';
+import Pay from '../shared/Pay'
+import { useRouter } from 'next/navigation'
 
 interface TitleInterface  {
   title: string
@@ -21,15 +25,27 @@ interface TitleInterface  {
   }
 } // This title utilized in SEO.
 
-const Slug:FC<TitleInterface> = ({data, title}) => {
-  
-  const [isBrowser, setIsBrowser] = useState(false)
-  useEffect(() => {
-      setIsBrowser(true)
-    }, [])
+const UserSlug:FC<TitleInterface> = ({data, title}) => {
+    const [isBrowser, setIsBrowser] = useState(false)
+    const router = useRouter()
+    useEffect(() => {
+        setIsBrowser(true)
+      }, [])
 
     if(!data)
         return <Empty/>
+
+    const addToCart = async (id : string) =>{
+        try {
+
+        const {data} = await axios.post('/api/cart', {product: id})
+        mutate('/api/cart?count=true') // To update Cart count
+        message.success("Product Added to Cart") 
+        } 
+        catch (error) {
+          clientCatchError(error)
+        } 
+    }
 
     return (
         <>
@@ -62,23 +78,18 @@ const Slug:FC<TitleInterface> = ({data, title}) => {
               </Button>
             ) : (
               <div className="lg:flex sm:flex-col gap-4 mt-4">
-                <Link href={'/login'}>
-                  <Button
-                    type="primary"
-                    className="!bg-green-600 hover:!bg-green-700 !font-semibold !text-lg !py-6 !px-10"
-                  >
-                    Buy Now
-                  </Button>
-                </Link>
-                <Link href={'/login'}>
-                <Button
+                <Pay
+                    title='Buy Now'
+                    product={data} 
+                    onSuccess={()=>router.push("/user/orders")}
+                />
+                <Button onClick={()=>addToCart(data._id)}
                   icon={<ShoppingCartOutlined />}
                   type="default"
                   className="!border-green-600 !text-green-700 hover:!border-green-700 hover:!text-green-800 !font-semibold !text-lg !py-6 !px-10"
                 >
                   Add to Cart
                 </Button>
-                </Link>
               </div>
             )}
           </div>
@@ -88,4 +99,4 @@ const Slug:FC<TitleInterface> = ({data, title}) => {
   )
 }
 
-export default Slug
+export default UserSlug

@@ -1,0 +1,54 @@
+{
+  "entity": "event",
+  "account_id": "acc_E0LCIeIFfjPAwI",
+  "event": "payment.authorized",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_QlRlo59igyzecV",
+        "entity": "payment",
+        "amount": 147300,
+        "currency": "INR",
+        "status": "authorized",
+        "order_id": "order_QlRlZh8LNMjV6n",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "Bulk Product",
+        "card_id": null,
+        "bank": null,
+        "wallet": null,
+        "vpa": "success@razorpay",
+        "email": "rahul@mail.com",
+        "contact": "+919999999999",
+        "notes": {
+          "name": "rahul rajawat",
+          "user": "684967cd2430ca5ab5542143",
+          "orders": "{\"products\":[\"684ed2ef2a4793df574aadd1\",\"684ea1a82a4793df574aad70\"],\"prices\":[500,699],\"discounts\":[15,28.6],\"quantities\":[1,2]}"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": null,
+        "error_description": null,
+        "error_source": null,
+        "error_step": null,
+        "error_reason": null,
+        "acquirer_data": {
+          "rrn": "481151139385",
+          "upi_transaction_id": "C494227FA96814E07DC4F1BF1A1B2C5C"
+        },
+        "created_at": 1750858434,
+        "upi": {
+          "vpa": "success@razorpay"
+        }
+      }
+    }
+  },
+  "created_at": 1750858435
+}

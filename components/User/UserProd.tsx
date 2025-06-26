@@ -12,6 +12,7 @@ import React, { FC, useEffect, useState } from 'react'
 import '@ant-design/v5-patch-for-react-19';
 import { useSession } from 'next-auth/react'
 import { mutate } from 'swr'
+import Pay from '../shared/Pay'
 
 interface ServerSideProductsProps extends dataInterface {
   currentPage: number
@@ -89,7 +90,7 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
             >
               <Card.Meta
                 title={
-                  <Link href={`/products/${item.title.toLowerCase().split(" ").join("-")}`} className='!text-inherit hover:!underline'>
+                  <Link href={`/user/products/${item.title.toLowerCase().split(" ").join("-")}`} className='!text-inherit hover:!underline'>
                     {item.title}
                   </Link>
                 }
@@ -110,11 +111,12 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
                   <Button onClick={()=>addToCart(item._id)} icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
                     Add to cart
                   </Button>
-                  <Link href={`/products/${item.title.toLowerCase().split(" ").join("-")}`}>
-                    <Button type="primary" className='!w-full !bg-green-600 hover:!bg-green-700'>
-                      Buy now
-                    </Button>
-                  </Link>
+                  <Pay
+                    title='Buy Now'
+                    btnStyle='!w-full !bg-green-600 hover:!bg-green-700' 
+                    product={item} 
+                    onSuccess={()=>router.push("/user/orders")}
+                  />
                 </>
               )}
             </Card>

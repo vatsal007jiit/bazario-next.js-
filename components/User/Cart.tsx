@@ -12,16 +12,15 @@ import '@ant-design/v5-patch-for-react-19';
 
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import { useSession } from 'next-auth/react'
+import Pay from '../shared/Pay'
+import { useRouter } from 'next/navigation'
 
-interface ModifiedRazorpayInterface extends RazorpayOrderOptions {
-  notes?: any
-}
 
 
 const Cart = () => {
   const [isBrowser, setIsBrowser] = useState(false)
   const [loading, setLoading] = useState({ state: false, index: 0, buttonIndex: 0 })
-  const { Razorpay } = useRazorpay();
+  const router = useRouter();
 
   useEffect(() => {
     setIsBrowser(true)
@@ -66,79 +65,8 @@ const Cart = () => {
     }
     return sum
   }
-
-  const getOrderPayload = ()=>{
-    const products = []
-    const prices = []
-    const discounts = []
-    const quantities = []
-
-    // if(!isArr)
-    // {
-    //   return {
-    //     products: [product._id],
-    //     prices: [product.price],
-    //     discounts: [product.discount],
-    //     quantities: [1]
-    //   }
-    // }
-
-    for(let item of data)
-    {
-      products.push(item.product._id)
-      prices.push(item.product.price)
-      discounts.push(item.product.discount)
-      quantities.push(item.qnt)
-    }
-    return {
-      products,
-      prices,
-      discounts,
-      quantities
-    }
-  }
-  const payNow = async(amount: number) => {
-    try {
-      console.log(getOrderPayload())
-     const {data} = await axios.post('/api/razorpay/order', {amount} )
-     console.log(data)
-
-     const options: ModifiedRazorpayInterface = {
-          name: "Ecom Shops",
-          description: "Bulk Product",
-          amount: data.amount,
-          order_id: data.id,
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-          currency: 'INR',
-          prefill: {
-            name: session?.data?.user?.name as string,
-            email: session?.data?.user?.email as string,
-            contact: "9999999999"
-          },
-          notes: {
-            name: session?.data?.user.name as string,
-            user: session?.data?.user.id,
-            orders: JSON.stringify(getOrderPayload())
-          },
-          handler: ()=>{
-            console.log("success")
-          }
-      }; 
-
-     const rzp = new Razorpay(options)
-      rzp.open()
-
-      rzp.on("payment.failed", ()=>{
-        console.log("Failed")
-      })
-
-    } 
-    catch (error) {
-      clientCatchError(error)
-    }
-  }
-
-  if (!isBrowser || isLoading) return <Skeleton active className="p-6" />
+  
+  if (!isBrowser || isLoading) return <Skeleton active className="p-6 h-100" />
 
   if (error) {
     return (
@@ -242,24 +170,20 @@ const Cart = () => {
 
             <div className="flex justify-between text-gray-700">
               <span>Delivery Fee</span>
-              <span className="text-green-600 font-medium">₹50</span>
+              <span className="text-green-600 font-medium">₹0</span>
             </div>
 
             <hr />
 
             <div className="flex justify-between text-xl font-bold text-green-900">
               <span>Total Payable</span>
-              <span>₹{(getTotalAmount() + 50).toLocaleString()}</span>
+              <span>₹{(getTotalAmount()).toLocaleString()}</span>
             </div>
-
-            <Button
-              size="large"
-              type="primary"
-              onClick={() => payNow(getTotalAmount() + 50)}
-              className="!w-full !py-6 !font-medium !text-lg !bg-green-600 hover:!bg-green-700"
-            >
-              Pay Now
-            </Button>
+            
+            <Pay 
+              product={data} 
+              onSuccess={()=>router.push("/user/orders")}
+              />
           </div>
         </div>
       </div>

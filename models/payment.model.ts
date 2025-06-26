@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import {Schema, model, models} from "mongoose"
 import UserModel from "./user.model";
-import orderModel from "./order.model";
 
 const paymentSchema = new Schema({
     user: {
@@ -9,19 +8,42 @@ const paymentSchema = new Schema({
         ref: UserModel,
         required: true
     },
-    order: {
-        type: mongoose.Types.ObjectId,
-        ref: orderModel,
+    orderId: {
+        type: String,
         required: true
     },
     paymentId: {
         type: String,
         required: true
     },
+    amount: {
+        type: Number,
+        required: true
+    },
+    currency: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    method: {
+        type: String,
+        required: true
+    },
+    tax: {
+        type: Number,
+        default: 0 
+    },
+    fee: {
+        type: Number,
+        default: 0 
+    },
     vendor: {
         type: String,
-        default: "razorpay",
-        enum: ["razorpay", "stripe"]
+        default: 'razorpay',
+        enum: ['razorpay', 'stripe']
     }
 }, {timestamps: true})
 

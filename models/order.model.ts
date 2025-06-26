@@ -1,35 +1,49 @@
-import mongoose, {model, models, Schema} from "mongoose"
-import ProductModel from "./product.model"
-import UserModel from "./user.model"
+import mongoose, {Schema, model, models} from 'mongoose'
+import UserModel from './user.model'
+import ProductModel from './product.model'
+import shortid from 'shortid'
 
 const orderSchema = new Schema({
+    orderId: {
+        type: String
+    },
     user: {
         type: mongoose.Types.ObjectId,
         ref: UserModel,
         required: true
     },
-    product: {
+    products: [{
         type: mongoose.Types.ObjectId,
         ref: ProductModel,
         required: true
-    },
-    price: {
+    }],
+    prices: [{
         type: Number,
-        required : true
-    },
-    discount: {
+        required: true
+    }],
+    discounts: [{
         type: Number,
-        required : true
+        required: true
+    }],
+    quantities: [{
+        type: Number,
+        required: true
+    }],
+    grossTotal: {
+        type: Number,
+        required: true
     },
     status: {
         type: String,
-        default: "processing",
-        enum: ['processing', 'dispatched' , 'fulfiled', 'returned']
+        default: 'processing',
+        enum: ['processing', 'dispatched', 'returned']
     }
-}, 
-{timestamps: true}
-)
+}, {timestamps: true})
 
-const orderModel = models.Order || model ("Order", orderSchema)
+orderSchema.pre('save', function(next){
+    this.orderId = shortid.generate().toUpperCase()
+    next()
+})
 
-export default orderModel
+const OrderModel = models.Order || model("Order", orderSchema)
+export default OrderModel
