@@ -1,5 +1,5 @@
 'use client'
-import { Button, Modal, Result } from 'antd'
+import { Button, message, Modal, Result } from 'antd'
 import '@ant-design/v5-patch-for-react-19';
 import clientCatchError from '@/lib/client-catch-error'
 import axios from 'axios'
@@ -95,11 +95,12 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
       if(!session.data)
         throw new Error("Session not initalized yet")
 
-    //   if(!session.data.user.address.pincode)
-    //   {
-    //     sessionStorage.setItem("message", "Please update your address first")
-    //     return router.push("/user/settings")
-    //   }
+      if(!session.data.user.address.pincode)
+      {
+        sessionStorage.setItem("message", "Please update your address first")
+        message.warning("Please update the address")
+        return router.push("/user/profile")
+      }
 
       const payload = {
         amount: isArr ? getTotalAmount() : calcPrice(product.price, product.discount)

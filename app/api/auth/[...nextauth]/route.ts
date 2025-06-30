@@ -2,7 +2,6 @@ import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import axios from "axios";
-import { JWT } from "next-auth/jwt";
 
 
 export const authOptions: NextAuthOptions = {
@@ -55,6 +54,7 @@ export const authOptions: NextAuthOptions = {
                     user.email = data.email
                     user.name = data.name
                     user.role = data.role
+                    user.address = data.address
                     return true
                 }
                 catch(err)
@@ -64,14 +64,32 @@ export const authOptions: NextAuthOptions = {
             }
             return true
         },
-        async jwt({token, user}) {
+        // async jwt({token, user}) {
 
-            if(user)
-            {
-                token.id = user.id
-                token.role = user.role
-            }
-            return token
+        //     if(user)
+        //     {
+        //         token.id = user.id
+        //         token.role = user.role
+        //         token.address = user.address
+        //     }
+        //     return token
+        // },
+            async jwt({token, user, trigger, session}) {
+        // Handle initial sign in
+        if(user) {
+            token.id = user.id
+            token.role = user.role
+            token.address = user.address
+            token.name = user.name 
+        }
+        
+        // Handle session update trigger // This we have added to update token after user profile is updated from Profile page so fetch new data from token
+        if(trigger === "update" && session) {
+            token.name = session.user.name
+            token.address = session.user.address
+        }
+        
+        return token
         },
         async session({session, token}) {
             
@@ -79,6 +97,8 @@ export const authOptions: NextAuthOptions = {
             {
                 session.user.id = token.id as string
                 session.user.role = token.role as string
+                session.user.address = token.address as any
+                session.user.name = token.name as string
             }
 
             return session
