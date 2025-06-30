@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse as res } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
-mongoose.connect(process.env.DB_URL!)
+mongoose.connect(process.env.DB!)
 
 export const PUT = async (req: NextRequest) =>{
     try {
@@ -17,7 +17,6 @@ export const PUT = async (req: NextRequest) =>{
         const id = session.user.id
         const body = await req.json()
      
-        console.log(id, body)
         const user = await UserModel.findByIdAndUpdate(id, body, {new: true})
 
         if(!user)

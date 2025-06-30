@@ -35,7 +35,8 @@ const userSchema = new Schema({
         city: {type: String, default: null},
         state: {type: String, default: null},
         country: {type: String, default: null},
-        pincode: {type: Number, default: null}
+        pincode: {type: Number, default: null},
+        contact: {type:Number, default: null}
     }
 }, {timestamps: true})
 

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import bg from "@/public/images/bg.jpg";
 
 const Login = () => {
-  
+  const [loading, setLoading] = useState(false)
   const [isBrowser, setIsBrowser] = useState(false)
     
       useEffect(() => {
@@ -27,6 +27,7 @@ const Login = () => {
 
   const login = async (value: any)=>{
     try {
+      setLoading(true)
       const payload = {
       ...value,
       redirect: false,
@@ -48,6 +49,9 @@ const Login = () => {
     } 
     catch (error) {
       clientCatchError(error)
+    }
+    finally{
+      setLoading(false)
     }
     
   }
@@ -124,6 +128,7 @@ const Login = () => {
                   htmlType="submit"
                   size="large"
                   type="primary"
+                  loading={loading}
                   icon={<LoginOutlined />}
                   iconPosition={"end"}
                   className="!bg-green-600 hover:!bg-green-700 !font-semibold "

@@ -107,7 +107,7 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
       }
       
       const {data} = await axios.post('/api/razorpay/order', payload)
-      console.log(data)
+      
 
       const options: ModifiedRazorpayInterface = {
           name: "Ecom Shops",

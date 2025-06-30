@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, Result, Skeleton, Table, Tag } from 'antd'
+import { Avatar, Empty, Result, Skeleton, Table, Tag } from 'antd'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import useSWR from 'swr'
@@ -10,6 +10,7 @@ import '@ant-design/v5-patch-for-react-19';
 
 const Payments = () => {
   const { data, isLoading, error } = useSWR('/api/payment', fetcher)
+ 
   const [isBrowser, setIsBrowser] = useState(false)
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Payments = () => {
       render: (item: any) => (
         <div className="flex gap-3 items-center">
           <Avatar size="large" className="bg-orange-500!">
-            {getInitials(item.user.fullName)}
+            {getInitials(item?.user?.fullName)}
           </Avatar>
           <div className="truncate max-w-[180px]">
             <h1 className="font-medium capitalize truncate">{item?.user?.fullName}</h1>
@@ -39,20 +40,55 @@ const Payments = () => {
       render: (id: string) => <span className="break-all">{id}</span>,
     },
     {
-      title: 'Product',
-      key: 'product',
-      render: (item: any) => <span className="truncate block max-w-[120px]">{item?.order?.product?.title}</span>,
+      title: 'Status',
+      key: 'status',
+      render: (item: any)=>(
+        <>
+          {
+            item.status === "captured" ? 
+            <Tag className='uppercase' color="green">{item.status}</Tag>
+            :
+            <Tag className='uppercase' color="magenta">{item.status}</Tag>
+          }
+        </>
+      )
+    },
+    {
+      title: 'Order ID',
+      key: 'oid',
+      render: (item: any) => <span className="truncate block max-w-[120px]">{item?.orderId}</span>,
     },
     {
       title: 'Amount',
       key: 'amount',
-      render: (item: any) => <span>₹{item?.order?.price}</span>,
+      render: (item: any) => <span>₹{item?.amount}</span>,
     },
     {
       title: 'Vendor',
       key: 'vendor',
       render: (item: any) => (
-        <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item.vendor}</Tag>
+        <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.vendor}</Tag>
+      ),
+    },
+    {
+      title: 'Fee',
+      key: 'fee',
+      render: (item: any) => (
+        <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.fee}</Tag>
+      ),
+    },
+    {
+      title: 'Tax',
+      key: 'tax',
+      render: (item: any) => (
+        <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.tax}</Tag>
+      ),
+    },
+    {
+      title: 'Method',
+      key: 'method',
+      render: (item: any) => (
+        <Tag className="uppercase !bg-green-700 !text-white font-semibold">{item?.method}</Tag>
       ),
     },
     {
@@ -63,6 +99,9 @@ const Payments = () => {
       ),
     },
   ]
+
+  if (!data || data.length === 0)
+    return <Empty description="No Payments found!" className="mt-12" />;
 
   if (isLoading) return <Skeleton active className="col-span-4" />
 
@@ -81,7 +120,7 @@ const Payments = () => {
       <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-sm overflow-x-auto">
         <Table
           columns={columns}
-          dataSource={data?.payments || []}
+          dataSource={data || []}
           rowKey="_id"
           scroll={{ x: 'max-content' }}
           pagination={{ pageSize: 8 }}

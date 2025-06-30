@@ -25,6 +25,8 @@ const Orders = () => {
         return '#87d068';
       case 'returned':
         return '#f50';
+      case 'fulfilled':
+        return '#016630';
       default:
         return 'default';
     }

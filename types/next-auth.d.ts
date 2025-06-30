@@ -14,6 +14,7 @@ declare module "next-auth"{
                 state: string
                 country: string
                 pincode:  number
+                contact: number
             }
         }
     }
@@ -27,6 +28,7 @@ declare module "next-auth"{
                 state: string
                 country: string
                 pincode:  number
+                conatct: number
             }
     }
 }

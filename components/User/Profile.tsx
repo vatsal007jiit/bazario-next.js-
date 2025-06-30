@@ -48,11 +48,12 @@ const Profile = () => {
               city: values.city, 
               country: values.country,
               state: values.state,
-              pincode: values.pincode
+              pincode: values.pincode,
+              contact: values.contact
           }
         }
       const {data} = await axios.put('/api/user/profile', payload)
-      console.log(data)
+   
       message.success(data.message)
 
       await session.update({ 
@@ -143,6 +144,18 @@ const Profile = () => {
             className="!w-full"
             placeholder="e.g., 110001"
             maxLength={6}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label={<span className="font-bold text-green-800">Contact</span>}
+          name="contact"
+          rules={[{ required: true, message: 'Please enter your Mobile Number' }]}
+        >
+          <InputNumber
+            size="large"
+            className="!w-full"
+            placeholder="e.g., 9999999999"
           />
         </Form.Item>
 
