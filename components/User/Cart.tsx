@@ -168,14 +168,14 @@ const Cart = () => {
 
             <div className="flex justify-between text-gray-700">
               <span>Delivery Fee</span>
-              <span className="text-green-600 font-medium">₹{getTotalAmount()<500?50:0}</span>
+              <span className="text-green-600 font-medium">₹{getTotalAmount()<1000?50:0}</span>
             </div>
 
             <hr />
 
             <div className="flex justify-between text-xl font-bold text-green-900">
               <span>Total Payable</span>
-              <span>₹{getTotalAmount()<500?(getTotalAmount()+50).toLocaleString():(getTotalAmount()).toLocaleString()}</span>
+              <span>₹{getTotalAmount()<1000?(getTotalAmount()+50).toLocaleString():(getTotalAmount()).toLocaleString()}</span>
             </div>
             
             <Pay 

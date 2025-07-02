@@ -19,7 +19,7 @@ const ProductPage = async ({ searchParams }: ProdPageProps) => {
   
   try {
     const productRes = await fetch(`${process.env.SERVER}/api/product?${queryParams.toString()}`, {
-      cache: 'no-store' // Ensure fresh data on each request
+      cache: 'no-store' // Ensure fresh data on each request . SSG disabled ,SSR enabled for this page
     })
     const products = productRes.ok ? await productRes.json() : { data: [], total: 0 }
     

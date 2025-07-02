@@ -1,12 +1,15 @@
 'use client'
 import dataInterface from '@/interface/data.interface'
 import calcPrice from '@/lib/calcPrice'
+import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, Pagination, Skeleton, Tag } from 'antd'
+import { Button, Card, Input, Pagination, Skeleton, Tag } from 'antd'
+import axios from 'axios'
+import { debounce } from 'lodash'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 
 interface ServerSideProductsProps extends dataInterface {
@@ -18,10 +21,18 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isBrowser, setIsBrowser] = useState(false)
+  const [products, setProducts] = useState<{ data: any[]; total: number }>({data: [], total: 0})
 
   useEffect(() => {
     setIsBrowser(true)
   }, [])
+
+  useEffect(()=>{
+      if(data)
+        {
+          setProducts(data)
+        }
+    }, [data])
 
   const onPaginate = (newPage: number, newLimit?: number) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -35,8 +46,19 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
     router.push(`/products?${params.toString()}`)
   }
 
+  const onSearch = debounce(async (e: any)=>{
+      try {  
+        const value = e.target.value.trim()
+        const{data} = await axios.get(`/api/product?search=${value}`)
+        setProducts(data)
+      } 
+      catch (error) {
+        clientCatchError(error)
+      }
+    }, 1000)
 
-  if (!isBrowser || !data?.data) {
+
+  if (!isBrowser || !products?.data) {
     return (
       <div className='!bg-green-300'>
         <div className='w-11/12 sm:w-10/12 mx-auto p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10'>
@@ -51,8 +73,17 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   return (
     <div className='bg-green-300'>
       <div className='w-9/12 mx-auto'>
+        <div className="flex justify-center pt-6">
+          <Input
+            placeholder="Search products..."
+            allowClear
+            onChange={onSearch}
+            size="large"
+            className="!w-full sm:!w-1/2 !rounded-lg !shadow-md"
+          />
+        </div>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 pt-10'>
-          {data.data.map((item: any, index: number) => (
+          {products.data.map((item: any, index: number) => (
             <Card
               key={`${item._id || item.id}-${currentPage}-${index}`}
               className='!cursor-default overflow-hidden '
@@ -107,7 +138,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
         </div>
         <div className='flex justify-center w-full mt-10 pb-8'>
           <Pagination
-            total={data.total}
+            total={products.total}
             onChange={onPaginate}
             current={currentPage}
             pageSize={currentLimit}

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Footer from "@/components/Footer";
 
@@ -7,13 +7,10 @@ import ChildrenInterface from '@/interface/children.interface';
 import Logo from './shared/Logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { FC } from 'react';
 
-const Layout: React.FC<ChildrenInterface> = ({children}) => {
-    const [isBrowser, setIsBrowser] = useState(false)
-      
-    useEffect(() => {
-      setIsBrowser(true)
-    }, [])
+const Layout: FC<ChildrenInterface> = ({children}) => {
+    
     const pathName = usePathname()
 
     const blacklists = [

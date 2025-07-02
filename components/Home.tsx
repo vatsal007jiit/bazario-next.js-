@@ -3,15 +3,12 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, Star, ArrowRight, Play, Zap, Shield, ChevronLeft, ChevronRight, LeafyGreen } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+
 export default function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isBrowser, setIsBrowser] = useState(false)
-  
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
+
    const heroImages = [
     {
       src: "https://greenatva.com/cdn/shop/files/Beige_Photo_Collage_Personal_Mood_Board_Facebook_Video.gif?v=1725707420&width=3840",

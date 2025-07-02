@@ -5,7 +5,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons'
 import { Button, Card, Empty, Tag } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import '@ant-design/v5-patch-for-react-19';
 
 interface TitleInterface  {
@@ -23,10 +23,7 @@ interface TitleInterface  {
 
 const Slug:FC<TitleInterface> = ({data, title}) => {
   
-  const [isBrowser, setIsBrowser] = useState(false)
-  useEffect(() => {
-      setIsBrowser(true)
-    }, [])
+ 
 
     if(!data)
         return <Empty/>
