@@ -1,8 +1,7 @@
 "use client";
 import { Button, Card, Divider, Form, Input, message } from "antd";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import Logo from "./shared/Logo";
+import Logo from "../shared/Logo";
 import {
   ArrowRightOutlined,
   GoogleOutlined,
@@ -56,43 +55,18 @@ const Login = () => {
     
   }
   const signInWithGoogle = async ()=>{
-    const payload = {
+    try {
+      const payload = {
         redirect: true,
         callbackUrl: '/user'
+      }
+
+      const res = await signIn("google", payload)
+    } 
+    catch (error) {
+      clientCatchError(error)
     }
-
-    const res = await signIn("google", payload)
   }
-  // const login = async (value: any)=>{
-  //     try {
-  //         const payload = {
-  //           ...value,
-  //           redirect: false
-  //         }
-  //         await signIn("credentials", payload)
-  //         const session = await getSession()
-
-  //         if(!session)
-  //             throw new Error("Failed to login user")
-
-  //         if(session.user.role === "user")
-  //             return router.replace("/user")
-
-  //         if(session.user.role === "admin")
-  //             return router.replace("/admin/products")
-  //     }
-  //     catch(err)
-  //     {
-  //         clientCatchError(err)
-  //     }
-  // }
-
-  // const signInWithGoogle = async ()=>{
-  //     const payload = {
-  //         redirect: true,
-  //         callbackUrl: '/'
-  //     }
-  //   }
   return (
     <div
       className="h-screen bg-cover bg-center mt-10"
@@ -139,7 +113,7 @@ const Login = () => {
             </Form>
             <Divider />
             <Button
-              // onClick={signInWithGoogle}
+              onClick={signInWithGoogle}
               icon={<GoogleOutlined />}
               size="large"
               className="!w-full !font-semibold"

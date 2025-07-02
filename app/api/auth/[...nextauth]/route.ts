@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
     ],
     pages: {
         signIn: '/login',
-        error: '/auth-failed'
+        error: '/auth-fail'
     },
     session: {
         strategy: 'jwt'
@@ -64,17 +64,7 @@ export const authOptions: NextAuthOptions = {
             }
             return true
         },
-        // async jwt({token, user}) {
-
-        //     if(user)
-        //     {
-        //         token.id = user.id
-        //         token.role = user.role
-        //         token.address = user.address
-        //     }
-        //     return token
-        // },
-            async jwt({token, user, trigger, session}) {
+        async jwt({token, user, trigger, session}) {
         // Handle initial sign in
         if(user) {
             token.id = user.id

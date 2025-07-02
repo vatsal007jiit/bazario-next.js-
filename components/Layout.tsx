@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import ChildrenInterface from '@/interface/children.interface';
 import Logo from './shared/Logo';
 import Link from 'next/link';
-import { UserAddOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 
 const Layout: React.FC<ChildrenInterface> = ({children}) => {

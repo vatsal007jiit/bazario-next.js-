@@ -1,7 +1,7 @@
 'use client'
 import fetcher from '@/lib/fetcher'
-import React, { use, useEffect, useState } from 'react'
-import { Button, Card, Empty, message, Result, Skeleton, Space, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Empty, message, Result, Skeleton, Typography } from 'antd'
 import useSWR, { mutate } from 'swr'
 import Image from 'next/image'
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
@@ -9,8 +9,6 @@ import clientCatchError from '@/lib/client-catch-error'
 import axios from 'axios'
 import calcPrice from '@/lib/calcPrice'
 import '@ant-design/v5-patch-for-react-19';
-
-import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import { useSession } from 'next-auth/react'
 import Pay from '../shared/Pay'
 import { useRouter } from 'next/navigation'
@@ -170,14 +168,14 @@ const Cart = () => {
 
             <div className="flex justify-between text-gray-700">
               <span>Delivery Fee</span>
-              <span className="text-green-600 font-medium">₹0</span>
+              <span className="text-green-600 font-medium">₹{getTotalAmount()<500?50:0}</span>
             </div>
 
             <hr />
 
             <div className="flex justify-between text-xl font-bold text-green-900">
               <span>Total Payable</span>
-              <span>₹{(getTotalAmount()).toLocaleString()}</span>
+              <span>₹{getTotalAmount()<500?(getTotalAmount()+50).toLocaleString():(getTotalAmount()).toLocaleString()}</span>
             </div>
             
             <Pay 
