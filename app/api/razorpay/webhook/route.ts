@@ -7,6 +7,7 @@ import fs from 'fs'
 import moment from "moment";
 import path from 'path'
 import CartModel from "@/models/cart.model";
+import ProductModel from "@/models/product.model";
 const root = process.cwd()
 
 interface CreateOrderInterface {
@@ -80,6 +81,24 @@ const createPayment = async (payment: CreatePaymentInterface)=>{
     }
 }
 
+//Update Quantity option in products collection [not tested yet]
+// const updateProductQuantities = async (products: string[], quantities: number[]) => {
+//     try {
+//         for (let i = 0; i < products.length; i++) {
+//             const product = await ProductModel.findById(products[i])
+//             if (product) {
+//                 // Ensure there's enough quantity before deducting
+//                 const newQuantity = product.quantity - quantities[i]
+//                 product.quantity = newQuantity >= 0 ? newQuantity : 0
+//                 await product.save()
+//             }
+//         }
+//         return true
+//     } catch (err) {
+//         return createLog(err, "update-product-quantity")
+//     }
+// }
+
 export const POST = async (req: NextRequest)=>{
     try {
         const signature = req.headers.get('x-razorpay-signature')
@@ -125,6 +144,9 @@ export const POST = async (req: NextRequest)=>{
                 return res.json({message: 'Failed to create payment'}, {status: 424})
 
             await deleteCarts({user, products: orders.products})
+            
+            // await updateProductQuantities(orders.products, orders.quantities)
+
 
             return res.json({success: true})
        }
@@ -150,6 +172,10 @@ export const POST = async (req: NextRequest)=>{
             
             if(!payment)
                 return res.json({message: 'Failed to create payment'}, {status: 424})
+
+            await deleteCarts({user, products: orders.products})
+            
+            // await updateProductQuantities(orders.products, orders.quantities)
 
             return res.json({success: true})
        }

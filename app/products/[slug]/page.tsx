@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: data?.product?.description || "Product details",
     keywords: 'Greenatva roll-ons',
     openGraph: {
-      title: data ? `Greenatva - ${data?.product?.title}` : 'Ecom',
+      title: data ? `Greenatva - ${data?.product?.title}` : 'Greenatva',
       description: data?.product?.description || "Product details",
       url: `${process.env.SERVER}/products/${slug}`,
       siteName: "Greenatva",
