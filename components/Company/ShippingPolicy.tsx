@@ -44,7 +44,7 @@ export default function ShippingPolicy() {
           <p className="text-gray-700">
             For delays or undelivered packages, please contact our support team at{" "}
             <a href="mailto:support@greenatva.com" className="text-green-500 underline">support@greenatva.com</a>{" "}
-            or call <a href="tel:9999999999" className="text-green-500 underline">9999999999</a>. We'll assist you as quickly as possible.
+            or call <a href="tel:9999999999" className="text-green-500 underline">9999999999</a>. We will assist you as quickly as possible.
           </p>
         </div>
 

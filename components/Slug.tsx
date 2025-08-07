@@ -21,7 +21,7 @@ interface TitleInterface  {
   }
 } // This title utilized in SEO.
 
-const Slug:FC<TitleInterface> = ({data, title}) => {
+const Slug:FC<TitleInterface> = ({data}) => {
   
  
 

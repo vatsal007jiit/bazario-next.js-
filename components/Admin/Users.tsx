@@ -1,9 +1,9 @@
 'use client'
 import fetcher from '@/lib/fetcher'
-import { Button, Card, message, Result, Select, Skeleton } from 'antd'
+import {Card, message, Result, Select, Skeleton } from 'antd'
 import moment from 'moment'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import useSWR, { mutate } from 'swr'
 import '@ant-design/v5-patch-for-react-19';
 import clientCatchError from '@/lib/client-catch-error'
@@ -11,16 +11,12 @@ import axios from 'axios'
 
 const Users = () => {
   const {data, error, isLoading} = useSWR('/api/user',fetcher)
-  const [isBrowser, setIsBrowser] = useState(false)
-  const [loading, setLoading] = useState(false)  
-
-    useEffect(() => {
-      setIsBrowser(true)
-    }, [])
+  
+  // const [loading, setLoading] = useState(false)  
 
     const changeRole = async(role: string, id: string)=>{
       try {
-        setLoading(true)
+        // setLoading(true)
         const {data} = await axios.put(`/api/user/role/${id}`, {role}) 
         
         message.success(data.message)
@@ -29,9 +25,9 @@ const Users = () => {
       catch (error) {
         clientCatchError(error)
       }
-      finally{
-        setLoading(false)
-      }
+      // finally{
+      //   setLoading(false)
+      // }
     }
 
 
@@ -52,7 +48,7 @@ const Users = () => {
   }
   return (
     <div className='grid lg:grid-cols-4 md:grid-cols-2 gap-8'>
-        
+         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
      {data.users.map((user: any, index: number) => (
         <Card key={index} hoverable>
             <div className='flex flex-col items-center gap-6'>

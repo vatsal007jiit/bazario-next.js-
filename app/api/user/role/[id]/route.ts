@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 import idInterface from "@/interface/id.interface";
 import serverCatchError from "@/lib/server-catch-Error";
 import UserModel from "@/models/user.model";

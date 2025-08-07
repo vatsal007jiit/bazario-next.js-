@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import { NextRequest, NextResponse as res } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+
 import { getServerSession } from "next-auth";
 import CartModel from "@/models/cart.model";
 import serverCatchError from "@/lib/server-catch-Error";
+import { authOptions } from "@/lib/auth-options";
 
 mongoose.connect(process.env.db!);
 

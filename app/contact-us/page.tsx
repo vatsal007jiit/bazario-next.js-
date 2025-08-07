@@ -4,4 +4,4 @@ const ContactUsRouter = () => {
   return <ContactUs/>
 }
 
-export default ContactUs
+export default ContactUsRouter

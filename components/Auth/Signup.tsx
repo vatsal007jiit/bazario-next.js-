@@ -2,7 +2,7 @@
 import { UserAddOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message } from 'antd'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Logo from '../shared/Logo'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
@@ -12,14 +12,9 @@ import bg from '@/public/images/bg.jpg'
 
 const Signup = () => {
 
-    const [isBrowser, setIsBrowser] = useState(false)
-        
-    useEffect(() => {
-    setIsBrowser(true)
-    }, [])
-  
+ 
     const router = useRouter()
-
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSignup = async (values: any)=>{
       try {
         const {data} = await axios.post('/api/user/signup', values)

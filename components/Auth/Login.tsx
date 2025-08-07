@@ -1,9 +1,8 @@
 "use client";
 import { Button, Card, Divider, Form, Input, message } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "../shared/Logo";
 import {
-  ArrowRightOutlined,
   GoogleOutlined,
   LoginOutlined,
 } from "@ant-design/icons";
@@ -16,14 +15,10 @@ import bg from "@/public/images/bg.jpg";
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
-  const [isBrowser, setIsBrowser] = useState(false)
-    
-      useEffect(() => {
-        setIsBrowser(true)
-      }, [])
+ 
       
   const router = useRouter()
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const login = async (value: any)=>{
     try {
       setLoading(true)
@@ -61,7 +56,7 @@ const Login = () => {
         callbackUrl: '/user'
       }
 
-      const res = await signIn("google", payload)
+     await signIn("google", payload)
     } 
     catch (error) {
       clientCatchError(error)
@@ -123,7 +118,7 @@ const Login = () => {
               Sign In with Google
             </Button>
             <div className="flex gap-2">
-              <p className="text-gray-700">Don't have an acount ?</p>
+              <p className="text-gray-700">Dont have an acount ?</p>
               <Link
                 className="!text-green-700 font-semibold hover:!text-green-900"
                 href="/sign-up"

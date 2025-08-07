@@ -51,7 +51,7 @@ const SlugRouter = async ({params}:slugInterface) => {
   
   try {
     const {slug} = await params 
-    const slugRes = await fetch(`${process.env.Server}/api/product/${slug}`) 
+    const slugRes = await fetch(`${process.env.SERVER}/api/product/${slug}`) 
     const data = slugRes.ok ? await slugRes.json(): null
     return (<Slug data={data.product} title={slug} />)
   } 

@@ -14,12 +14,8 @@ const AdminLayout: FC<ChildrenInterface> = ({ children }) => {
   const session = useSession()
   const user = session?.data?.user
   const [drawerVisible, setDrawerVisible] = useState(false)
-  const [isBrowser, setIsBrowser] = useState(false)
   const pathName = usePathname()
 
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
 
   useEffect(() => {
   // Auto-close drawer when route changes

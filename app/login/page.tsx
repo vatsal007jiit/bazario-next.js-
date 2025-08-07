@@ -5,4 +5,4 @@ const LoginRouter = () => {
   return <Login/>
 }
 
-export default Login
+export default LoginRouter

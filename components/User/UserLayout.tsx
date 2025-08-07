@@ -1,12 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Footer from "@/components/Footer";
 import type { MenuProps } from 'antd';
 import ChildrenInterface from '@/interface/children.interface';
 import Link from 'next/link';
-import { LogoutOutlined, ProfileOutlined, ShoppingCartOutlined, ShoppingFilled, ShoppingOutlined, ShoppingTwoTone, UserAddOutlined, UserOutlined } from '@ant-design/icons';
-import { usePathname } from 'next/navigation';
+import { LogoutOutlined, ProfileOutlined,  ShoppingOutlined,  UserOutlined } from '@ant-design/icons';
+// import { usePathname } from 'next/navigation';
 import Logo from '../shared/Logo';
 import { Avatar, Badge, Dropdown, Tooltip } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
@@ -15,15 +15,10 @@ import useSWR from 'swr';
 import fetcher from '@/lib/fetcher';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
-   const [isBrowser, setIsBrowser] = useState(false)
-      
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
-  
+   
   const {data} = useSWR('/api/cart?count=true', fetcher)
   
-  const pathName = usePathname()
+  // const pathName = usePathname()
   const session = useSession()
   console.log(session)
   const user = session?.data?.user
@@ -92,6 +87,7 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
                 </div>
                 <div>
                   <Dropdown menu={dropMenu}>
+                     {/* eslint-disable-next-line  @typescript-eslint/no-non-null-asserted-optional-chain */}
                     <Avatar size='large' className='!bg-green-700 font-semibold'>{getInitials(user?.name!) || <UserOutlined />}</Avatar>
                  </Dropdown>
                 </div>

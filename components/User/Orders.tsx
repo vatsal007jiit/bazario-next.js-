@@ -37,6 +37,7 @@ const Orders = () => {
 
   return (
     <div className="flex flex-col gap-10 p-4 sm:p-8">
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {data.map((item: any, index: number) => (
         <Card
           key={index}
@@ -51,6 +52,7 @@ const Orders = () => {
           className="shadow-md"
         >
           <div className="flex flex-col gap-6">
+             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {item.products.map((product: any, pIndex: number) => {
               const price = item.prices[pIndex];
               const discount = item.discounts[pIndex];

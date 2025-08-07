@@ -3,7 +3,7 @@ import serverCatchError from "@/lib/server-catch-Error";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse as res } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 import CartModel from "@/models/cart.model";
 
 mongoose.connect(process.env.DB!)

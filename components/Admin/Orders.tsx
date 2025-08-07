@@ -7,18 +7,13 @@ import getInitials from '@/lib/getInitials'
 import { Avatar, Empty, message, Result, Select, Skeleton, Table, Tag } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import '@ant-design/v5-patch-for-react-19';
 
 const Orders = () => {
   const [loading, setLoading] = useState(false)
   const { data, isLoading, error } = useSWR('/api/order', fetcher)
-  const [isBrowser, setIsBrowser] = useState(false)
-
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
 
   const changeStatus = async (status: string, id: string) => {
     try {
@@ -52,6 +47,7 @@ const Orders = () => {
     {
       title : "OrderID",
       key: "oid",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render:(item:any)=>(
         <label>{item.orderId}</label>
       )
@@ -59,6 +55,7 @@ const Orders = () => {
     {
       title: 'Customer',
       key: 'customer',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <div className="flex gap-3 items-center">
           <Avatar size="large" className="bg-orange-500!">
@@ -74,10 +71,12 @@ const Orders = () => {
      {
       title: "Product",
       key: "product",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>{
       const products = item?.products;
       return (
         <div className="space-y-1">
+           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {products.map((prod: any, index: number) => (
             <div key={index}>
               <label>{prod.title}</label>
@@ -90,12 +89,14 @@ const Orders = () => {
     {
       title: "Price",
       key: "price",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>{
         const prices = item?.prices;
         const discounts = item?.discounts;
         return(
           <div className="space-y-1">
           {
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
           prices.map((price: any, index: number) => {
             const dis = discounts[index]
             return(
@@ -115,10 +116,12 @@ const Orders = () => {
     {
       title: "Quantity",
       key: "qnt",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>{
         const qnts = item?.quantities;
         return(
           <div className="space-y-1">
+             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {qnts.map((qnt: any, index: number) => (
             <div key={index}>
               <label>{qnt}</label>
@@ -131,6 +134,7 @@ const Orders = () => {
     {
       title: "Total",
       key:'total',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render:(item: any)=>(
         <label>₹{item.grossTotal}</label>
       )
@@ -138,6 +142,7 @@ const Orders = () => {
     {
       title: 'Address',
       key: 'address',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>{
         const {street, city, state, pincode, contact} = item?.user?.address
         return(
@@ -154,6 +159,7 @@ const Orders = () => {
     {
       title: 'Status',
       key: 'status',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <div className='flex flex-col items-center gap-2'>
           <Tag color={getStatusColor(item.status)} className="w-fit">{item.status.toUpperCase()} </Tag>
@@ -176,6 +182,7 @@ const Orders = () => {
     {
       title: "Date",
       key: "date",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>(
         <label>{moment(item.createdAt).format('MMM DD, YYYY HH:MM')}</label>
       )

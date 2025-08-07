@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowRightOutlined, DeleteOutlined, EditOutlined, PlusOutlined, SaveOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
+import { ArrowRightOutlined, DeleteOutlined, EditOutlined,SaveOutlined,  UploadOutlined } from '@ant-design/icons'
 import { Button, Card, Divider, Form, Input, InputNumber, message, Modal, Pagination, Popconfirm, Result, Skeleton, Tag, Upload } from 'antd'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
@@ -22,11 +22,7 @@ const Products = () => {
   const [editId, setEditId] = useState<string | null> (null)
   const {data, error, isLoading} = useSWR(`/api/product?page=${page}&limit=${limit}`, fetcher)
   const [products, setProducts] = useState({data: [], total: 0})
-  const [isBrowser, setIsBrowser] = useState(false)
-    
-      useEffect(() => {
-        setIsBrowser(true)
-      }, [])
+ 
   useEffect(()=>{
     if(data)
       {
@@ -43,22 +39,22 @@ const Products = () => {
     prodForm.resetFields();
     setEditId(null);
   }
-  
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleUploadChange = ({ fileList }: any) => {
   setFileList(fileList);
   };
-
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createProduct = async (values: any)=>{
    
     values.image = values.image?.file.originFileObj
     const formData = new FormData() //This is followed because we have file in form - and we want to send our data in multipart/form-data format
 
-    for (let key in values)
+    for (const key in values)
     {
       formData.append(key, values[key])
 
     }
-    const {data} = await axios.post('/api/product', formData)
+    await axios.post('/api/product', formData)
     mutate(`/api/product?page=${page}&limit=${limit}`)
     message.success("Product Added Successfully")
   
@@ -81,7 +77,7 @@ const Products = () => {
       clientCatchError(error)
     }
   }
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editProduct = (item: any) =>{
     try{
       setOpen(true)
@@ -102,6 +98,7 @@ const Products = () => {
   //   mutate(`/api/product?page=${page}&limit=${limit}`)
   // } // this method does not handle image -handling form in json format
 
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveProduct = async (values: any) =>
   {
   
@@ -111,7 +108,7 @@ const Products = () => {
       formData.append('image', values.image?.file.originFileObj)
     }
     // Append rest of fields
-    for (let key in values){
+    for (const key in values){
       if(key!== 'image'){
         formData.append(key, values[key])
       }
@@ -126,7 +123,7 @@ const Products = () => {
      handleClose()
      mutate(`/api/product?page=${page}&limit=${limit}`)
   }
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSearch = debounce(async (e: any)=>{
     try {  
       const value = e.target.value.trim()
@@ -167,6 +164,7 @@ const Products = () => {
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10'>
+         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {products.data.map((item: any, index: number)=>(
           <Card 
           key={index}
@@ -182,8 +180,8 @@ const Products = () => {
            }
            actions={[
                 <EditOutlined key="edit" className='!text-green-400' onClick={()=>editProduct(item)}  />,
-                <Popconfirm title="Are you sure you want to delete this product?" onConfirm={()=>deleteProduct(item.slug)}>
-                  <DeleteOutlined key="delete" className='!text-rose-400'/>
+                <Popconfirm key="delete" title="Are you sure you want to delete this product?" onConfirm={()=>deleteProduct(item.slug)}>
+                  <DeleteOutlined  className='!text-rose-400'/>
                 </Popconfirm>
                 
             ]}

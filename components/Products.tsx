@@ -3,14 +3,14 @@ import dataInterface from '@/interface/data.interface'
 import calcPrice from '@/lib/calcPrice'
 import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, Input, Pagination, Skeleton, Tag } from 'antd'
+import { Button, Card, Input, message, Pagination, Skeleton } from 'antd'
 import axios from 'axios'
 import { debounce } from 'lodash'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FC, useEffect, useState } from 'react'
-
+import '@ant-design/v5-patch-for-react-19';
 
 interface ServerSideProductsProps extends dataInterface {
   currentPage: number
@@ -21,6 +21,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isBrowser, setIsBrowser] = useState(false)
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [products, setProducts] = useState<{ data: any[]; total: number }>({data: [], total: 0})
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
     // Navigate to new URL - this will trigger server-side re-render
     router.push(`/products?${params.toString()}`)
   }
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSearch = debounce(async (e: any)=>{
       try {  
         const value = e.target.value.trim()
@@ -56,6 +57,13 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
         clientCatchError(error)
       }
     }, 1000)
+
+   const handleAddToCart = () => {
+    message.success("Login to proceed");
+    setTimeout(() => {
+      router.push('/login');
+    }, 1000); // show toast for 1 sec before navigating
+  };
 
 
   if (!isBrowser || !products?.data) {
@@ -83,6 +91,7 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
           />
         </div>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 pt-10'>
+           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {products.data.map((item: any, index: number) => (
             <Card
               key={`${item._id || item.id}-${currentPage}-${index}`}
@@ -121,16 +130,13 @@ const Products: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
                 </Button>
               ) : (
                 <>
-                <Link href={'/login'}>
-                  <Button icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
+                  <Button onClick={handleAddToCart} icon={<ShoppingCartOutlined />} type="primary" danger className='!w-full !mt-5 !mb-2'>
                     Add to cart
                   </Button>
-                  </Link>
-                  <Link href={'/login'}>
-                    <Button type="primary" className='!w-full !bg-green-600 hover:!bg-green-700'>
-                      Buy now
-                    </Button>
-                  </Link>
+                  <Button onClick={handleAddToCart} type="primary" className='!w-full !bg-green-600 hover:!bg-green-700'>
+                    Buy now
+                  </Button>
+                 
                 </>
               )}
             </Card>

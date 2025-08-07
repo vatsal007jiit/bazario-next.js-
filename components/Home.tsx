@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { ChevronDown, Star, ArrowRight, Play, Zap, Shield, ChevronLeft, ChevronRight, LeafyGreen } from 'lucide-react';
+import { ChevronDown, Star, ArrowRight, Zap, Shield, ChevronLeft, ChevronRight, LeafyGreen } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -210,10 +210,11 @@ export default function Home() {
         {/* Image Container */}
         <div className="aspect-square bg-gradient-to-br from-green-300 to-green-500 rounded-2xl overflow-hidden relative group">
           {/* Main Image */}
-          <img 
-            src={heroImages[currentImageIndex].src} 
+          <Image
+            src={heroImages[currentImageIndex].src}
             alt={heroImages[currentImageIndex].alt}
-            className="w-full h-full object-cover transition-all duration-500 ease-in-out"
+            fill
+            className="object-cover transition-all duration-500 ease-in-out"
             onError={(e) => {
               // Fallback if image fails to load
               e.currentTarget.style.display = 'none';

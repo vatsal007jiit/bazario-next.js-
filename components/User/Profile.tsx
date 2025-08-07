@@ -4,7 +4,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input, InputNumber, message, Select } from 'antd';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 
 const { Option } = Select;
 
@@ -19,12 +19,9 @@ const indianStates = [
 
 const Profile = () => {
 
-  const [isBrowser, setIsBrowser] = useState(false)
+
   const [userForm] = Form.useForm();  
 
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
 
   const session = useSession()
   const user = session?.data?.user
@@ -38,7 +35,7 @@ const Profile = () => {
     }   
   }, [user, userForm])
   
-
+   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveChanges = async (values: any) => {
     try {
       const payload = {

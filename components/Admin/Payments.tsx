@@ -1,7 +1,7 @@
 'use client'
 
 import { Avatar, Empty, Result, Skeleton, Table, Tag } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import moment from 'moment'
 import useSWR from 'swr'
 import fetcher from '@/lib/fetcher'
@@ -11,16 +11,13 @@ import '@ant-design/v5-patch-for-react-19';
 const Payments = () => {
   const { data, isLoading, error } = useSWR('/api/payment', fetcher)
  
-  const [isBrowser, setIsBrowser] = useState(false)
 
-  useEffect(() => {
-    setIsBrowser(true)
-  }, [])
 
   const columns = [
     {
       title: 'Customer',
       key: 'customer',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <div className="flex gap-3 items-center">
           <Avatar size="large" className="bg-orange-500!">
@@ -42,6 +39,7 @@ const Payments = () => {
     {
       title: 'Status',
       key: 'status',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any)=>(
         <>
           {
@@ -56,16 +54,19 @@ const Payments = () => {
     {
       title: 'Order ID',
       key: 'oid',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => <span className="truncate block max-w-[120px]">{item?.orderId}</span>,
     },
     {
       title: 'Amount',
       key: 'amount',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => <span>₹{item?.amount}</span>,
     },
     {
       title: 'Vendor',
       key: 'vendor',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.vendor}</Tag>
       ),
@@ -73,6 +74,7 @@ const Payments = () => {
     {
       title: 'Fee',
       key: 'fee',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.fee}</Tag>
       ),
@@ -80,6 +82,7 @@ const Payments = () => {
     {
       title: 'Tax',
       key: 'tax',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <Tag className="capitalize !bg-blue-900 !text-white font-semibold">{item?.tax}</Tag>
       ),
@@ -87,6 +90,7 @@ const Payments = () => {
     {
       title: 'Method',
       key: 'method',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <Tag className="uppercase !bg-green-700 !text-white font-semibold">{item?.method}</Tag>
       ),
@@ -94,6 +98,7 @@ const Payments = () => {
     {
       title: 'Date',
       key: 'date',
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (item: any) => (
         <span>{moment(item.createdAt).format('MMM DD, YYYY hh:mm A')}</span>
       ),

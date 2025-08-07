@@ -3,14 +3,14 @@ import dataInterface from '@/interface/data.interface'
 import calcPrice from '@/lib/calcPrice'
 import clientCatchError from '@/lib/client-catch-error'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, message, Pagination, Skeleton, Tag } from 'antd'
+import { Button, Card, message, Pagination, Skeleton} from 'antd'
 import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { FC, useEffect, useState } from 'react'
 import '@ant-design/v5-patch-for-react-19';
-import { useSession } from 'next-auth/react'
+
 import { mutate } from 'swr'
 import Pay from '../shared/Pay'
 
@@ -45,7 +45,7 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
   const addToCart = async (id : string) =>{
     try {
 
-      const {data} = await axios.post('/api/cart', {product: id})
+      await axios.post('/api/cart', {product: id})
       mutate('/api/cart?count=true') // To update Cart count
       message.success("Product Added to Cart") 
     } 
@@ -70,6 +70,7 @@ const UserProd: FC<ServerSideProductsProps> = ({ data, currentPage, currentLimit
     <div className='bg-green-300'>
       <div className='w-9/12 mx-auto'>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 pt-10'>
+           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {data.data.map((item: any, index: number) => (
             <Card
               key={`${item._id || item.id}-${currentPage}-${index}`}

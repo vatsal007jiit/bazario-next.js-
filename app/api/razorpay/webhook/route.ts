@@ -7,7 +7,6 @@ import fs from 'fs'
 import moment from "moment";
 import path from 'path'
 import CartModel from "@/models/cart.model";
-import ProductModel from "@/models/product.model";
 const root = process.cwd()
 
 interface CreateOrderInterface {

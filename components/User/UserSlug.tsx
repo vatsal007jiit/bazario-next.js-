@@ -6,7 +6,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons'
 import { Button, Card, Empty, message, Tag } from 'antd'
 import axios from 'axios'
 import Image from 'next/image'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC} from 'react'
 import { mutate } from 'swr'
 import '@ant-design/v5-patch-for-react-19';
 import Pay from '../shared/Pay'
@@ -25,12 +25,10 @@ interface TitleInterface  {
   }
 } // This title utilized in SEO.
 
-const UserSlug:FC<TitleInterface> = ({data, title}) => {
-    const [isBrowser, setIsBrowser] = useState(false)
+const UserSlug:FC<TitleInterface> = ({data}) => {
+    
     const router = useRouter()
-    useEffect(() => {
-        setIsBrowser(true)
-      }, [])
+   
 
     if(!data)
         return <Empty/>
@@ -38,7 +36,7 @@ const UserSlug:FC<TitleInterface> = ({data, title}) => {
     const addToCart = async (id : string) =>{
         try {
 
-        const {data} = await axios.post('/api/cart', {product: id})
+        await axios.post('/api/cart', {product: id})
         mutate('/api/cart?count=true') // To update Cart count
         message.success("Product Added to Cart") 
         } 

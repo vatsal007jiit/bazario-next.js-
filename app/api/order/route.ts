@@ -1,9 +1,10 @@
+import { authOptions } from "@/lib/auth-options";
 import serverCatchError from "@/lib/server-catch-Error";
 import orderModel from "@/models/order.model";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse as res } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+
 
 mongoose.connect(process.env.DB!)
 
@@ -24,7 +25,7 @@ export const POST = async (req: NextRequest)=>{
 }
 
 
-export const GET = async (req: NextRequest)=>{
+export const GET = async ()=>{
     try {
         const session = await getServerSession(authOptions)
         if(!session)

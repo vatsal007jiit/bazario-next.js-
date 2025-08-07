@@ -9,7 +9,7 @@ import clientCatchError from '@/lib/client-catch-error'
 import axios from 'axios'
 import calcPrice from '@/lib/calcPrice'
 import '@ant-design/v5-patch-for-react-19';
-import { useSession } from 'next-auth/react'
+
 import Pay from '../shared/Pay'
 import { useRouter } from 'next/navigation'
 
@@ -25,7 +25,7 @@ const Cart = () => {
   }, [])
 
   const { data, isLoading, error } = useSWR('/api/cart', fetcher)
-  const session = useSession()
+  // const session = useSession()
   
   const updateQnt = async (num: number, id: string, index: number, buttonIndex: number) => {
     try {
@@ -57,7 +57,7 @@ const Cart = () => {
 
   const getTotalAmount = () => {
     let sum = 0
-    for (let item of data) {
+    for (const item of data) {
       const amount = calcPrice(item.product.price, item.product.discount) * item.qnt
       sum += amount
     }
@@ -105,6 +105,7 @@ const Cart = () => {
         {/* Left Section - Cart Items */}
         <div className="lg:col-span-2 flex flex-col gap-4">
           {
+           //eslint-disable-next-line @typescript-eslint/no-explicit-any 
             data.map((item: any, index: number) => (
               <Card key={index} hoverable className="!p-4 rounded-xl bg-white shadow-sm">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

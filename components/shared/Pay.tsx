@@ -11,12 +11,14 @@ import { useRouter } from 'next/navigation';
 import calcPrice from '@/lib/calcPrice';
 
 interface ModifiedRazorpayInterface extends RazorpayOrderOptions {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   notes: any
 }
 
 interface PayInterface {
     btnStyle?: string
     title?: string
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     product: any
     onSuccess?: (payload: PaymentSuccessInterface)=>void
     onFailed?: (payload: PaymentFailedInterface)=>void
@@ -44,7 +46,7 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
 
   const getTotalAmount = ()=>{
     let sum = 0
-    for(let item of product)
+    for(const item of product)
     {
       const amount = calcPrice(item.product.price, item.product.discount)*item.qnt
       sum = sum+amount
@@ -68,7 +70,7 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
       }
     }
 
-    for(let item of product)
+    for(const item of product)
     {
       products.push(item.product._id)
       prices.push(item.product.price)
@@ -130,7 +132,7 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
 
       const rzp = new Razorpay(options)
       rzp.open()
-
+   //eslint-disable-next-line @typescript-eslint/no-explicit-any
         rzp.on("payment.failed",(err: any)=>{
             setOpen(true)
             if(!onFailed)
@@ -166,7 +168,7 @@ const Pay: FC<PayInterface> = ({product, onSuccess, onFailed, btnStyle = "!w-ful
             title="Payment Failed"
             subTitle="An error occured during payment capture please try again after sometime"
             extra={[
-              <Link href="/">
+              <Link href="/"  key="go-back">
                 <Button type="primary" key="console">
                   Go Back
                 </Button>

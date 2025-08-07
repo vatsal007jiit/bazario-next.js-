@@ -7,9 +7,19 @@ import path from "path";
 import fs from "fs"
 import {v4 as uuid} from "uuid"
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 
 mongoose.connect(process.env.DB!)
+
+interface payloadInterface {
+    title: string
+    description: string
+    price: number
+    discount: number
+    quantity: number
+    image: string
+    slug: string
+}
 
 export const GET = async (req: NextRequest, context: slugInterface) =>{
     try{
@@ -53,13 +63,16 @@ export const PUT = async (req: NextRequest, context: slugInterface) =>
         const {slug: id} = await context.params // so we will send id from frontend in slug variable here we are aliasing it. We can do similar in delete also
         const body = await req.formData()
 
-        const payload: any = {
-            title: body.get("title"),
-            description: body.get("description"),
-            price: body.get("price"),
-            discount: body.get("discount"),
-            quantity: body.get("quantity")
+        const payload: payloadInterface = {
+            title: body.get("title") as string ,
+            description: body.get("description") as string,
+            price: parseFloat(body.get("price") as string),
+            discount: parseFloat(body.get("discount") as string),
+            quantity: parseInt(body.get("quantity") as string),
+            image: "", // temporary, will be filled if image is uploaded
+            slug: ""   // will be set below
         }
+
         const file = body.get('image') as File | null
 
         if(file)

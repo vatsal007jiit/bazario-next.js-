@@ -1,4 +1,3 @@
-import messageInterface from "@/interface/message.interface"
 import { NextResponse as res } from "next/server"
 
 

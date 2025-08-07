@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse as res } from "next/server";
 import Razorpay from 'razorpay'
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 import serverCatchError from "@/lib/server-catch-Error";
 mongoose.connect(process.env.DB!)
 
