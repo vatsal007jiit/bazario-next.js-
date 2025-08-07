@@ -1,4 +1,5 @@
 import Products from "@/components/Products"
+import { fetchProducts } from "@/controller/product.controller"
 
 interface ProdPageProps {
   searchParams: Promise<{
@@ -7,23 +8,35 @@ interface ProdPageProps {
   }>
 }
 
+export const revalidate = 3600 // Rebuild page every hour (ISR - Incremental Static Regeneration)
+
 const ProductPage = async ({ searchParams }: ProdPageProps) => {
   const params = await searchParams
   const page =  params.page || '1'
   const limit = params.limit || '8'
   
   // Build query string
-  const queryParams = new URLSearchParams()
-  queryParams.set('page', page)
-  queryParams.set('limit', limit)
+  // const queryParams = new URLSearchParams()
+  // queryParams.set('page', page)
+  // queryParams.set('limit', limit)
   
   try {
-    const productRes = await fetch(`${process.env.SERVER}/api/product?${queryParams.toString()}`, {
-      cache: 'no-store' // Ensure fresh data on each request . SSG disabled ,SSR enabled for this page
-    })
-    const products = productRes.ok ? await productRes.json() : { data: [], total: 0 }
+    // const productRes = await fetch(`${process.env.SERVER}/api/product?${queryParams.toString()}`, {
+    //   cache: 'no-store' // Ensure fresh data on each request . SSG disabled ,SSR enabled for this page
+    // })
+    // const products = productRes.ok ? await productRes.json() : { data: [], total: 0 }
     
-    return (
+    // return (
+    //   <Products 
+    //     data={products} 
+    //     currentPage={parseInt(page)}
+    //     currentLimit={parseInt(limit)}
+    //   />
+    // )
+
+    //Above code will work fine when making server from node seperately. Currently This is failing at build time so we are using function from product controller. [132]
+    const products = await fetchProducts(parseInt(page), parseInt(limit))
+     return (
       <Products 
         data={products} 
         currentPage={parseInt(page)}
