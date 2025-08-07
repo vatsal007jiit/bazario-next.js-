@@ -17,6 +17,7 @@ export const authOptions: NextAuthOptions = {
                         email: credentials?.email,
                         password: credentials?.password
                     }
+                    console.log('SERVER:', process.env.SERVER)
                     const {data} = await axios.post(`${process.env.SERVER}/api/user/login`, payload)
                     return data
                 }
