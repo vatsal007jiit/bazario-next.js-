@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { NextRequest, NextResponse as res } from "next/server";
 
 import { getServerSession } from "next-auth";
