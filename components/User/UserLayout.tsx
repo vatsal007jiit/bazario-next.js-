@@ -16,7 +16,17 @@ import fetcher from '@/lib/fetcher';
 
 const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
    
-  const {data} = useSWR('/api/cart?count=true', fetcher)
+  const {data, error} = useSWR('/api/cart?count=true', fetcher, {
+    refreshInterval: 30000, // Refresh every 30 seconds
+    errorRetryCount: 3,
+    errorRetryInterval: 5000,
+    onError: (err) => {
+      console.error('Cart count fetch error:', err);
+    }
+  })
+  
+  // Fallback count if there's an error
+  const cartCount = error ? 0 : (data?.count || 0);
   
   // const pathName = usePathname()
   const session = useSession()
@@ -79,7 +89,7 @@ const UserLayout: React.FC<ChildrenInterface> = ({children}) => {
                 <div>
                   <Link href="/user/cart" className="inline-block">
                     <Tooltip title="My Cart">
-                      <Badge count={data && data.count} color='brown'>
+                      <Badge count={cartCount} color='brown'>
                         <ShoppingOutlined className="text-3xl !text-green-700 cursor-pointer" />
                       </Badge>
                     </Tooltip>
