@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import CartModel from "@/models/cart.model";
 import serverCatchError from "@/lib/server-catch-Error";
 import { authOptions } from "@/lib/auth-options";
-import { getToken } from "next-auth/jwt";
 import dbConnect from "@/lib/db";
 
 export const POST = async (req: NextRequest) => {
@@ -18,7 +17,6 @@ export const POST = async (req: NextRequest) => {
 
     const body = await req.json();
     
-    // Validate required fields
     if (!body.product) {
       return res.json({ message: "Product ID is required" }, { status: 400 });
     }
@@ -55,11 +53,8 @@ export const GET = async (req: NextRequest) => {
     // Ensure database connection
     await dbConnect();
     
-    // const session = await getServerSession(authOptions);
-    //  if (!session || session?.user?.role !== "user")
-    //   return res.json({ message: "Unauthorized Request" }, { status: 401 });
-    const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    if (!session || session.role !== "user")
+    const session = await getServerSession(authOptions);
+    if (!session || session?.user?.role !== "user")
       return res.json({ message: "Unauthorized Request" }, { status: 401 });
     
     const {searchParams} = new URL(req.url)
@@ -67,8 +62,8 @@ export const GET = async (req: NextRequest) => {
     if(isCount)
     {
         try {
-            // Add timeout and retry logic for count query
-            const count = await CartModel.countDocuments({user: session.id})
+           
+            const count = await CartModel.countDocuments({user: session.user.id})
                 .maxTimeMS(5000) // 5 second timeout
                 .exec();
             return res.json({count})
@@ -78,8 +73,7 @@ export const GET = async (req: NextRequest) => {
             return res.json({count: 0})
         }
     }
-    // const cart = await CartModel.find({user: session.user.id}).populate("product")
-    const cart = await CartModel.find({user: session.id}).populate("product")
+    const cart = await CartModel.find({user: session.user.id}).populate("product")
     return res.json(cart);
   } 
   catch (error) {
