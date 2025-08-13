@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Live Project Link - https://bazario-next-js.vercel.app
+Test Credentials - rahul@mail.com passowrd 12345
+
 ## Getting Started
 
 First, run the development server:
