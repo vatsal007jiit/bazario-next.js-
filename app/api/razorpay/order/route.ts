@@ -29,6 +29,6 @@ export const POST = async (req:NextRequest)=> {
         return res.json(order)
     } 
     catch (error) {
-        return serverCatchError(error)
+        return serverCatchError(error, 500, "Payment Gateway Error")
     }
 }
